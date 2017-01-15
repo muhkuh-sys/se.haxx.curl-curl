@@ -1,0 +1,14 @@
+diff -uNr org/src/CMakeLists.txt new/src/CMakeLists.txt
+--- org/src/CMakeLists.txt	2016-09-27 08:06:29.000000000 +0200
++++ new/src/CMakeLists.txt	2017-01-15 16:57:27.161976037 +0100
+@@ -236,7 +236,9 @@
+ add_feature_info(Compression ENABLE_ZLIB_COMPRESSION
+   "using zlib for compression")
+ if(ENABLE_ZLIB_COMPRESSION)
+-  find_package(ZLIB REQUIRED)
++  find_package(net.zlib-zlib REQUIRED CONFIG)
++  GET_TARGET_PROPERTY(ZLIB_LIBRARIES net.zlib-zlib::zlibstatic LOCATION)
++  SET(ZLIB_INCLUDE_DIRS net.zlib-zlib_INCLUDE_DIR)
+ 
+   target_include_directories(libssh2 PRIVATE ${ZLIB_INCLUDE_DIRS})
+   list(APPEND LIBRARIES ${ZLIB_LIBRARIES})
