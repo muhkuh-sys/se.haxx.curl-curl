@@ -10,7 +10,7 @@ BUILD_DIR="${PRJ_DIR}/build/linux32"
 CMAKE_COMPILER="-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32"
 
 # This is the absolute path to the jonchki tool.
-JONCHKI=/home/baccy/workspace/org.muhkuh.lua-jonchki/jonchki.lua
+JONCHKI=${PRJ_DIR}/jonchki/local/jonchki.lua
 # All jonchki arguments to select the target system.
 JONCHKI_SYSTEM="--cpu-architecture x86"
 
