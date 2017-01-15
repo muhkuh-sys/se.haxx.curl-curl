@@ -1,0 +1,12 @@
+diff -uNr org/CMakeLists.txt new/CMakeLists.txt
+--- org/CMakeLists.txt	2016-10-31 08:48:14.000000000 +0100
++++ new/CMakeLists.txt	2017-01-15 15:31:13.523226853 +0100
+@@ -459,7 +459,7 @@
+ set(HAVE_ZLIB_H OFF)
+ set(HAVE_ZLIB OFF)
+ if(CURL_ZLIB)
+-  find_package(ZLIB QUIET)
++  find_package(net.zlib-zlib REQUIRED CONFIG)
+   if(ZLIB_FOUND)
+     set(HAVE_ZLIB_H ON)
+     set(HAVE_ZLIB ON)

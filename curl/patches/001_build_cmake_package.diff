@@ -1,0 +1,45 @@
+diff -uNr curl-7.51.0_original/CMakeLists.txt curl-7.51.0_patched/CMakeLists.txt
+--- curl-7.51.0_original/CMakeLists.txt	2016-10-31 08:48:14.000000000 +0100
++++ curl-7.51.0_patched/CMakeLists.txt	2016-12-16 19:34:15.000000000 +0100
+@@ -1204,3 +1204,30 @@
+     file(APPEND "${CURL_SLN_FILENAME}" "\n# This should be regenerated!\n")
+   endif()
+ endif()
++
++#----------------------------------------------------------------------------
++#
++# Build the CMAKE package.
++#
++INCLUDE(CMakePackageConfigHelpers)
++
++SET(INCLUDE_INSTALL_DIR include/)
++CONFIGURE_PACKAGE_CONFIG_FILE(CMake/config.cmake.in
++                              "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}Config.cmake"
++                              INSTALL_DESTINATION cmake
++                              PATH_VARS INCLUDE_INSTALL_DIR)
++
++WRITE_BASIC_PACKAGE_VERSION_FILE("${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-version.cmake"
++                                 COMPATIBILITY ExactVersion)
++
++EXPORT(EXPORT EXPORT_package
++       FILE "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-targets.cmake"
++       NAMESPACE ${PROJECT_NAME}::)
++
++INSTALL(EXPORT EXPORT_package
++        FILE ${PROJECT_NAME}-targets.cmake
++        NAMESPACE ${PROJECT_NAME}::
++        DESTINATION cmake)
++INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}Config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-version.cmake"
++        DESTINATION cmake
++        COMPONENT Devel)
+diff -uNr curl-7.51.0_original/lib/CMakeLists.txt curl-7.51.0_patched/lib/CMakeLists.txt
+--- curl-7.51.0_original/lib/CMakeLists.txt	2016-10-10 14:12:28.000000000 +0200
++++ curl-7.51.0_patched/lib/CMakeLists.txt	2016-12-16 19:32:10.000000000 +0100
+@@ -104,6 +104,7 @@
+ endif()
+ 
+ install(TARGETS ${LIB_NAME}
++  EXPORT EXPORT_package
+   ARCHIVE DESTINATION lib
+   LIBRARY DESTINATION lib
+   RUNTIME DESTINATION bin)

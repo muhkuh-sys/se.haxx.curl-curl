@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jonchki-artifact version="1.0">
+	<info group="se.haxx"
+	      module="curl"
+	      artifact="curl"
+	      version="@PROJECT_VERSION@"
+	      vcs-id="@PROJECT_VERSION_VCS@">
+		<license name="MIT"/>
+		<author name="Daniel Stenberg" url="http://curl.haxx.se" />
+		<description>
+			Curl is a command line tool for transferring data specified with URL syntax.
+		</description>
+	</info>
+	<build-dependencies>
+		<dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.8.1"/>
+	</build-dependencies>
+	<dependencies/>
+</jonchki-artifact>
