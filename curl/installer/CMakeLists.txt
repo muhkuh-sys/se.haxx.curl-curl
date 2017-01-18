@@ -16,10 +16,10 @@ SET(INSTALL_UBUNTU_1610_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_16
 SET(INSTALL_UBUNTU_1610_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1610_x86_64)
 
 # Get the version from one of the packages.
-SET(se.haxx.curl-curl_DIR ${INSTALL_WINDOWS_x86}/dev/cmake)
-MESSAGE("se.haxx.curl-curl_DIR ${se.haxx.curl-curl_DIR}")
-FIND_PACKAGE("se.haxx.curl-curl" REQUIRED CONFIG)
-SET(PROJECT_VERSION ${se.haxx.curl-curl_VERSION})
+SET(CURL_DIR ${INSTALL_WINDOWS_x86}/cmake)
+FIND_PACKAGE("CURL" REQUIRED CONFIG)
+SET(PROJECT_VERSION ${CURL_VERSION})
+
 
 SET(CPACK_OUTPUT_FILE_PREFIX targets/jonchki/repository/se/haxx/curl/curl/${PROJECT_VERSION})
 SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY FALSE)
