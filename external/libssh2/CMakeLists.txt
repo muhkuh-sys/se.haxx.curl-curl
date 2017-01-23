@@ -5,7 +5,7 @@ PROJECT("libssh2")
 INCLUDE(ExternalProject)
 
 # Python is used for some test scripts.
-FIND_PACKAGE(PythonInterp REQUIRED)
+FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
 SET(VERSION_EXTERNAL "1.8.0")
 
