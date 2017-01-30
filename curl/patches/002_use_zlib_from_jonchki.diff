@@ -1,0 +1,15 @@
+diff -uNr curl-7.51.0_org/CMakeLists.txt curl-7.51.0_patched/CMakeLists.txt
+--- curl-7.51.0_org/CMakeLists.txt	2016-10-31 08:48:14.000000000 +0100
++++ curl-7.51.0_patched/CMakeLists.txt	2017-01-29 16:20:47.466852758 +0100
+@@ -459,7 +459,10 @@
+ set(HAVE_ZLIB_H OFF)
+ set(HAVE_ZLIB OFF)
+ if(CURL_ZLIB)
+-  find_package(ZLIB QUIET)
++  find_package(net.zlib-zlib REQUIRED CONFIG)
++  SET(ZLIB_FOUND TRUE)
++  GET_TARGET_PROPERTY(ZLIB_LIBRARIES net.zlib-zlib::zlibstatic LOCATION)
++  SET(ZLIB_INCLUDE_DIRS net.zlib-zlib_INCLUDE_DIR)
+   if(ZLIB_FOUND)
+     set(HAVE_ZLIB_H ON)
+     set(HAVE_ZLIB ON)
