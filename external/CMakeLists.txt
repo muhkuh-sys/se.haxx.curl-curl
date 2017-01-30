@@ -24,11 +24,22 @@ ENDIF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv)")
 #
 # Include the projects in the subdirectories.
 #
-ADD_SUBDIRECTORY(libgpg-error)
-ADD_SUBDIRECTORY(libgcrypt)
+# libnettle and gnutls depend on GMP.
+ADD_SUBDIRECTORY(gmp)
+
+# libnettle needs GMP. gnutls depends on libnettle.
+ADD_SUBDIRECTORY(libnettle)
+
+# libidn will be needed by gnutls if pk-11 is incuded - some day...
+#ADD_SUBDIRECTORY(libidn)
+
+ADD_SUBDIRECTORY(gnutls)
+
+#ADD_SUBDIRECTORY(libgpg-error)
+#ADD_SUBDIRECTORY(libgcrypt)
 
 # libssh2 depends on gcrypt.
-ADD_SUBDIRECTORY(libssh2)
+#ADD_SUBDIRECTORY(libssh2)
 
 #----------------------------------------------------------------------------
 

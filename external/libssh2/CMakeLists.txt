@@ -59,5 +59,3 @@ ExternalProject_Add(TARGET_libssh2
                     TEST_AFTER_INSTALL 1
                     TEST_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/install/lib/cmake/libssh2/Libssh2Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/install/lib/cmake/libssh2/LibSSH2Config.cmake
 )
-
-SET(LIBSSH2_CMAKE_MODULE_PATH  ${CMAKE_CURRENT_BINARY_DIR}/install/lib/cmake/libssh2  CACHE INTERNAL "The CMAKE configuration file for the ssh2 library.")
