@@ -16,7 +16,7 @@ ID=`docker run --detach --interactive --volume ${PRJDIR}:/tmp/work mbs_ubuntu_16
 docker exec ${ID} bash -c 'apt-get update --assume-yes'
 
 # Install the project specific packages.
-docker exec ${ID} bash -c 'apt-get install --assume-yes gettext lua5.1 lua-filesystem lua-expat lua51-mhash lua-curl lua-zip'
+docker exec ${ID} bash -c 'apt-get install --assume-yes gettext lua5.1 lua-filesystem lua-expat lua51-mhash lua-curl lua-zip groff-base m4 pkgconf'
 
 # Build the 32bit version.
 docker exec ${ID} bash -c 'export PATH=/usr/mingw-w64-i686/bin:${PATH} && cd /tmp/work && bash .build01_windows32.sh'
