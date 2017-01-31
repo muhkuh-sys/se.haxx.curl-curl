@@ -33,13 +33,13 @@ ADD_SUBDIRECTORY(libnettle)
 # libidn will be needed by gnutls if pk-11 is incuded - some day...
 #ADD_SUBDIRECTORY(libidn)
 
+# GnuTLS needs libnettle.
 ADD_SUBDIRECTORY(gnutls)
 
-#ADD_SUBDIRECTORY(libgpg-error)
-#ADD_SUBDIRECTORY(libgcrypt)
+ADD_SUBDIRECTORY(libgpg-error)
+ADD_SUBDIRECTORY(libgcrypt)
 
 # libssh2 depends on gcrypt.
-#ADD_SUBDIRECTORY(libssh2)
+ADD_SUBDIRECTORY(libssh2)
 
 #----------------------------------------------------------------------------
-
