@@ -34,7 +34,7 @@ ExternalProject_Add(TARGET_libnettle
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libnettle
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/nettle-3.3.tar.gz
                     URL_HASH SHA1=bf2b4d3a41192ff6177936d7bc3bee4cebeb86c4
-                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libnettle/src/TARGET_libnettle/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --enable-pic --with-include-path=${LIBGMP_INCLUDE_DIR} --with-lib-path=${LIBGMP_LIBRARY_DIR} ${CONFIGURE_HOST}
+                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "LIBS=-lgmp" ${CMAKE_CURRENT_BINARY_DIR}/libnettle/src/TARGET_libnettle/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --enable-pic --with-include-path=${LIBGMP_INCLUDE_DIR} --with-lib-path=${LIBGMP_LIBRARY_DIR} ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
 )
