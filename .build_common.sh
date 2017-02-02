@@ -9,9 +9,9 @@ echo "JONCHKI_SYSTEM = ${JONCHKI_SYSTEM}"
 # Create all folders.
 rm -rf ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}
-mkdir ${BUILD_DIR}/external
-mkdir ${BUILD_DIR}/build_requirements
-mkdir ${BUILD_DIR}/curl
+mkdir -p ${BUILD_DIR}/external
+mkdir -p ${BUILD_DIR}/build_requirements
+mkdir -p ${BUILD_DIR}/curl
 
 
 # Get the build requirements.
@@ -27,8 +27,9 @@ cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILE
 make
 popd
 
+CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/libssh2' -Dnet.zlib-zlib_DIR='${BUILD_DIR}/build_requirements/jonchki/install/dev/cmake' -DLIBGMP_DIR='${BUILD_DIR}/external/gmp/install' -DLIBNETTLE_DIR='${BUILD_DIR}/external/libnettle/install' -DLIBGCRYPT_DIR=${BUILD_DIR}/external/libgcrypt/install"
 # Build the CURL library.
 pushd ${BUILD_DIR}/curl
-cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${PRJ_DIR}
+cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_MODULES} ${PRJ_DIR}
 make
 popd
