@@ -25,54 +25,50 @@ CONFIGURE_FILE(installer/curl.xml
 #
 
 IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
-	IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-		SET(LOCAL_CFLAGS "-fPIC")
-	ELSE("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-		SET(LOCAL_CFLAGS "")
-	ENDIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+	IF(${CMAKE_CROSSCOMPILING})
+		IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+			# Get the prefix of the compiler.
+			GET_FILENAME_COMPONENT(GCC_BASENAME ${CMAKE_C_COMPILER} NAME)
+			IF(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+				SET(CONFIGURE_HOST "--host=${CMAKE_MATCH_1}")
+			ELSE(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+				MESSAGE(FATAL_ERROR "Failed to extract the compiler prefix from the C compiler ${CMAKE_C_COMPILER}")
+			ENDIF(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+		ELSE("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+			MESSAGE(FATAL_ERROR "Cross compiling detected, but not using GCC. This is currently not supported by the CMake wrapper for OpenSSL.")
+		ENDIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	ELSE(${CMAKE_CROSSCOMPILING})
+		SET(CONFIGURE_HOST "")
+	ENDIF(${CMAKE_CROSSCOMPILING})
 
-	# debug
-	find_package(LibSSH2 REQUIRED CONFIG)
+	# Get the includes and library for libssh2.
+	# Include folders are in LIBSSH2_INCLUDE_DIR .
+	# Library is in LIBSSH2_LIBRARY
+	FIND_PACKAGE(LibSSH2 REQUIRED CONFIG)
 	GET_TARGET_PROPERTY(LIBSSH2_LIBRARY Libssh2::libssh2 LOCATION)
 	GET_TARGET_PROPERTY(LIBSSH2_INCLUDE_DIR Libssh2::libssh2 INTERFACE_INCLUDE_DIRECTORIES)
 	MESSAGE("LIBSSH2_LIBRARY: ${LIBSSH2_LIBRARY}")
 	MESSAGE("LIBSSH2_INCLUDE_DIR: ${LIBSSH2_INCLUDE_DIR}")
+	SET(LIBSSH2_DIR ${LIBSSH2_INCLUDE_DIR}/..)
 
-
-	SET(PRJ_CMAKE_ARGS "")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DBUILD_CURL_EXE=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCURL_STATICLIB=ON")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DENABLE_THREADED_RESOLVER=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DENABLE_DEBUG=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DENABLE_CURLDEBUG=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DBUILD_TESTING=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_USE_OPENSSL=OFF")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_USE_LIBSSH2=ON")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DLibSSH2_DIR=${LibSSH2_DIR}")
-	MESSAGE("LibSSH2_DIR: ${LibSSH2_DIR}")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCURL_ZLIB=ON")
-	LIST(APPEND PRJ_CMAKE_ARGS "-Dnet.zlib-zlib_DIR=${net.zlib-zlib_DIR}")
+	# Get the includes and library for zlib.
 	MESSAGE("net.zlib-zlib_DIR: ${net.zlib-zlib_DIR}")
+	FIND_PACKAGE(net.zlib-zlib REQUIRED CONFIG)
+	GET_TARGET_PROPERTY(ZLIB_LIBRARIES net.zlib-zlib::zlibstatic LOCATION)
+	SET(ZLIB_INCLUDE_DIRS ${net.zlib-zlib_INCLUDE_DIR})
+	MESSAGE("ZLIB_LIBRARIES: ${ZLIB_LIBRARIES}")
+	MESSAGE("ZLIB_INCLUDE_DIRS: ${ZLIB_INCLUDE_DIRS}")
+	SET(ZLIB_DIR ${ZLIB_INCLUDE_DIRS}/..)
 
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} ${LOCAL_CFLAGS}")
-	# Do not overwrite the system name if it is equal to the host system name or the CURL build script will think it is in cross-compile mode.
-	IF(NOT (${CMAKE_SYSTEM_NAME} STREQUAL ${CMAKE_HOST_SYSTEM_NAME}))
-		LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}")
-	ENDIF(NOT (${CMAKE_SYSTEM_NAME} STREQUAL ${CMAKE_HOST_SYSTEM_NAME}))
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
-	# Set the ressource compiler on windows platforms.
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_RC_COMPILER=${CMAKE_RC_COMPILER}")
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=''")
-	LIST(APPEND PRJ_CMAKE_ARGS "-DPROJECT_VERSION=${VERSION_EXTERNAL}")
+	SET(GNUTLS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/gnutls/install)
+	MESSAGE("GNUTLS_DIR: ${GNUTLS_DIR}")
 
-	ExternalProject_Add(TARGET_curl
-	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/curl-${VERSION_EXTERNAL}
+	ExternalProject_Add(TARGET_libcurl
+	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.bz2
 	                    URL_HASH SHA1=f02a14bbe580d2a8cf3bf45a79d39eb595220ac7
-	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/curl-${VERSION_EXTERNAL}/src/TARGET_curl --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --copy-folder ${CMAKE_CURRENT_SOURCE_DIR}/copy_over --strip 1
-	                    CMAKE_ARGS ${PRJ_CMAKE_ARGS}
-	                    INSTALL_COMMAND make install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=-I${LIBSSH2_DIR}/include -I${LIBGCRYPT_DIR}/include -I${LIBNETTLE_DIR}/include -I${LIBGMP_DIR}/include -I${ZLIB_DIR}/include" "LDFLAGS=-L${LIBSSH2_DIR}/lib -L${LIBGCRYPT_DIR}/lib -L${LIBNETTLE_DIR}/lib -L${LIBGMP_DIR}/lib -L${ZLIB_DIR}/lib" "LIBS=-lssh2 -lgcrypt -lhogweed -lnettle -lgmp -lz" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-tls-srp --with-zlib=${ZLIB_DIR} --without-ssl --without-winssl --without-gssapi --with-gnutls=${GNUTLS_DIR} --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
+	                    BUILD_COMMAND make
+	                    INSTALL_COMMAND make install
 	)
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
