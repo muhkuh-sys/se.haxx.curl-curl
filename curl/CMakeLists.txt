@@ -62,12 +62,20 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 
 	SET(GNUTLS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/gnutls/install)
 	MESSAGE("GNUTLS_DIR: ${GNUTLS_DIR}")
+	# Set the link flags for the GnuTLS library.
+	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		# Windows builds need Crypt32 to access the certificate store.
+		SET(GNUTLS_LINKFLAGS  "-lcrypt32")
+	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		SET(GNUTLS_LINKFLAGS  "")
+	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
 
 	ExternalProject_Add(TARGET_libcurl
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.bz2
 	                    URL_HASH SHA1=f02a14bbe580d2a8cf3bf45a79d39eb595220ac7
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=-I${LIBSSH2_DIR}/include -I${LIBGCRYPT_DIR}/include -I${LIBNETTLE_DIR}/include -I${LIBGMP_DIR}/include -I${ZLIB_DIR}/include" "LDFLAGS=-L${LIBSSH2_DIR}/lib -L${LIBGCRYPT_DIR}/lib -L${LIBNETTLE_DIR}/lib -L${LIBGMP_DIR}/lib -L${ZLIB_DIR}/lib" "LIBS=-lssh2 -lgcrypt -lhogweed -lnettle -lgmp -lz" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-tls-srp --with-zlib=${ZLIB_DIR} --without-ssl --without-winssl --without-gssapi --with-gnutls=${GNUTLS_DIR} --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=-I${LIBSSH2_DIR}/include -I${LIBGCRYPT_DIR}/include -I${LIBNETTLE_DIR}/include -I${LIBGMP_DIR}/include -I${ZLIB_DIR}/include" "LDFLAGS=-L${LIBSSH2_DIR}/lib -L${LIBGCRYPT_DIR}/lib -L${LIBNETTLE_DIR}/lib -L${LIBGMP_DIR}/lib -L${ZLIB_DIR}/lib" "LIBS=-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-tls-srp --with-zlib=${ZLIB_DIR} --without-ssl --without-winssl --without-gssapi --with-gnutls=${GNUTLS_DIR} --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
