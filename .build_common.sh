@@ -32,4 +32,5 @@ CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/li
 pushd ${BUILD_DIR}/curl
 cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_MODULES} ${PRJ_DIR}
 make
+make install DESTDIR=${PWD}/install
 popd
