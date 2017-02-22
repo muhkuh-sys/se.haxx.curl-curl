@@ -16,6 +16,7 @@ mkdir -p ${PRJDIR}/build
 lxc launch mbs-ubuntu-1610-x64 ${CONTAINER} -c security.privileged=true
 lxc config device add ${CONTAINER} projectDir disk source=${PRJDIR} path=/tmp/work
 sleep 5
+lxc file push /etc/resolv.conf ${CONTAINER}/etc/resolv.conf
 
 # Update the package list to prevent "not found" messages.
 lxc exec ${CONTAINER} -- bash -c 'apt-get update --assume-yes'
@@ -25,7 +26,7 @@ lxc exec ${CONTAINER} -- bash -c 'apt-get install --assume-yes lua5.1 lua-filesy
 
 # Build the 64bit version.
 lxc exec ${CONTAINER} -- bash -c 'cd /tmp/work && bash .build03_linux.sh'
-lxc exec ${CONTAINER} -- bash -c 'tar --create --file /tmp/work/build/build_ubuntu_1610_x86_64.tar.gz --gzip --directory /tmp/work/build/linux/curl/curl/install .'
+lxc exec ${CONTAINER} -- bash -c 'tar --create --file /tmp/work/build/build_ubuntu_1610_x86_64.tar.gz --gzip --directory /tmp/work/build/linux/curl/install .'
 lxc exec ${CONTAINER} -- bash -c 'chown `stat -c %u:%g /tmp/work` /tmp/work/build/build_ubuntu_1610_x86_64.tar.gz'
 
 # Stop and remove the container.
