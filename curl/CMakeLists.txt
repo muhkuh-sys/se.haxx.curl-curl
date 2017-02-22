@@ -79,4 +79,34 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
+
+
+
+	INCLUDE(CMakePackageConfigHelpers)
+
+	SET(PROJECT_VERSION ${VERSION_EXTERNAL})
+	SET(LIBRARY_INSTALL_DIR "lib/libcurl.a")
+	SET(INCLUDE_INSTALL_DIR "include")
+	SET(LIB_NAME "curl")
+	SET(LINK_FLAGS "-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz")
+	CONFIGURE_PACKAGE_CONFIG_FILE(config.cmake.in
+	                              "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-config.cmake"
+	                              INSTALL_DESTINATION cmake
+	                              PATH_VARS LIBRARY_INSTALL_DIR INCLUDE_INSTALL_DIR
+	)
+
+	WRITE_BASIC_PACKAGE_VERSION_FILE("${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-version.cmake"
+	        COMPATIBILITY ExactVersion
+	)
+
+	INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-version.cmake"
+	        DESTINATION cmake
+	        COMPONENT Devel
+	)
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBSSH2_LIBRARY} ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
+	        DESTINATION lib
+	)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/install/include/
+	        DESTINATION include
+	)
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
