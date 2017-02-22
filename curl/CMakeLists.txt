@@ -62,15 +62,6 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 
 	SET(GNUTLS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/gnutls/install)
 	MESSAGE("GNUTLS_DIR: ${GNUTLS_DIR}")
-	# Set the link flags for the GnuTLS library.
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		# Windows builds need Crypt32 to access the certificate store.
-		SET(GNUTLS_LINKFLAGS  "-lcrypt32")
-		SET(SYSTEM_LIBRARIES  "-lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lwldap32 -lwinmm -lws2_32")
-	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		SET(GNUTLS_LINKFLAGS  "")
-		SET(SYSTEM_LIBRARIES  "")
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
 
 	ExternalProject_Add(TARGET_libcurl
@@ -82,6 +73,26 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    INSTALL_COMMAND make install
 	)
 
+	SET(LIBLIST "")
+	LIST(APPEND LIBLIST "-lssh2")
+	LIST(APPEND LIBLIST "-lgcrypt")
+	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		LIST(APPEND LIBLIST "-lcrypt32")
+	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	LIST(APPEND LIBLIST "-lhogweed")
+	LIST(APPEND LIBLIST "-lnettle")
+	LIST(APPEND LIBLIST "-lgmp")
+	LIST(APPEND LIBLIST "-lz")
+	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		LIST(APPEND LIBLIST "-lmsvcrt")
+		LIST(APPEND LIBLIST "-ladvapi32")
+		LIST(APPEND LIBLIST "-lshell32")
+		LIST(APPEND LIBLIST "-luser32")
+		LIST(APPEND LIBLIST "-lkernel32")
+		LIST(APPEND LIBLIST "-lwldap32")
+		LIST(APPEND LIBLIST "-lwinmm")
+		LIST(APPEND LIBLIST "-lws2_32")
+	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
 
 	INCLUDE(CMakePackageConfigHelpers)
@@ -91,7 +102,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(P_LIBRARY_NAME "libcurl.a")
 	SET(INCLUDE_INSTALL_DIR "include")
 	SET(LIB_NAME "curl")
-	SET(P_LINK_LIBRARIES "-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz ${SYSTEM_LIBRARIES}")
+	STRING(REPLACE ";" " " P_LINK_LIBRARIES "${LIBLIST}")
 	CONFIGURE_PACKAGE_CONFIG_FILE(config.cmake.in
 	                              "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-config.cmake"
 	                              INSTALL_DESTINATION cmake
