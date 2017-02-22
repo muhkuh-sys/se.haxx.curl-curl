@@ -34,7 +34,7 @@ ExternalProject_Add(TARGET_gnutls
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gnutls
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/gnutls-3.5.8.tar.xz
                     URL_HASH SHA1=238d5e62f9bb078101131dd2f4c7f2c1ac13e813
-                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "GMP_CFLAGS=-I${LIBGMP_INCLUDE_DIR}" "GMP_LIBS=-L${LIBGMP_LIBRARY_DIR}" "PKG_CONFIG_PATH=${LIBNETTLE_PREFIX}/lib/pkgconfig" ${CMAKE_CURRENT_BINARY_DIR}/gnutls/src/TARGET_gnutls/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --disable-tools --disable-tests --enable-static=yes --enable-shared=no --with-pic --with-included-libtasn1 --with-included-unistring --without-p11-kit ${CONFIGURE_HOST}
+                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "GMP_CFLAGS=-I${LIBGMP_INCLUDE_DIR}" "GMP_LIBS=-L${LIBGMP_LIBRARY_DIR}" "PKG_CONFIG_PATH=${LIBNETTLE_PREFIX}/lib/pkgconfig" ${CMAKE_CURRENT_BINARY_DIR}/gnutls/src/TARGET_gnutls/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --disable-tools --disable-tests --enable-static=yes --enable-shared=no --with-pic --with-included-libtasn1 --with-included-unistring --without-p11-kit --without-idn ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
 )
