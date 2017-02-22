@@ -66,8 +66,10 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		# Windows builds need Crypt32 to access the certificate store.
 		SET(GNUTLS_LINKFLAGS  "-lcrypt32")
+		SET(SYSTEM_LIBRARIES  "-lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lwldap32 -lwinmm -lws2_32")
 	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		SET(GNUTLS_LINKFLAGS  "")
+		SET(SYSTEM_LIBRARIES  "")
 	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
 
@@ -85,10 +87,11 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	INCLUDE(CMakePackageConfigHelpers)
 
 	SET(PROJECT_VERSION ${VERSION_EXTERNAL})
-	SET(LIBRARY_INSTALL_DIR "lib/libcurl.a")
+	SET(LIBRARY_INSTALL_DIR "lib")
+	SET(P_LIBRARY_NAME "libcurl.a")
 	SET(INCLUDE_INSTALL_DIR "include")
 	SET(LIB_NAME "curl")
-	SET(LINK_FLAGS "-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz")
+	SET(P_LINK_LIBRARIES "-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz ${SYSTEM_LIBRARIES}")
 	CONFIGURE_PACKAGE_CONFIG_FILE(config.cmake.in
 	                              "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-config.cmake"
 	                              INSTALL_DESTINATION cmake
