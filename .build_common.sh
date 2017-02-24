@@ -27,7 +27,7 @@ cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILE
 make
 popd
 
-CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/libssh2' -Dnet.zlib-zlib_DIR='${BUILD_DIR}/build_requirements/jonchki/install/dev/cmake' -DLIBGMP_DIR='${BUILD_DIR}/external/gmp/install' -DLIBNETTLE_DIR='${BUILD_DIR}/external/libnettle/install' -DLIBGCRYPT_DIR=${BUILD_DIR}/external/libgcrypt/install"
+CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/libssh2' -Dnet.zlib-zlib_DIR='${BUILD_DIR}/build_requirements/jonchki/install/dev/cmake' -DLIBGMP_DIR='${BUILD_DIR}/external/gmp/install' -DLIBNETTLE_DIR='${BUILD_DIR}/external/libnettle/install' -DLIBGCRYPT_DIR=${BUILD_DIR}/external/libgcrypt/install -DLIBGPG_ERROR_DIR=${BUILD_DIR}/external/libgpg-error/install"
 # Build the CURL library.
 pushd ${BUILD_DIR}/curl
 cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_MODULES} ${PRJ_DIR}

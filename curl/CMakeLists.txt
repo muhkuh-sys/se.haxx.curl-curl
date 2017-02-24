@@ -81,6 +81,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	LIST(APPEND LIBLIST "-lhogweed")
 	LIST(APPEND LIBLIST "-lnettle")
+	LIST(APPEND LIBLIST "-lgpg-error")
 	LIST(APPEND LIBLIST "-lgmp")
 	LIST(APPEND LIBLIST "-lz")
 	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -117,7 +118,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	        DESTINATION cmake
 	        COMPONENT Devel
 	)
-	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBSSH2_LIBRARY} ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBGPG_ERROR_DIR}/lib/libgpg-error.a ${LIBSSH2_LIBRARY} ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
 	        DESTINATION lib
 	)
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/install/include/
