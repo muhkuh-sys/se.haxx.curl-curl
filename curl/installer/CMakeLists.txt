@@ -50,6 +50,10 @@ INSTALL(DIRECTORY ${INSTALL_WINDOWS_x86}/cmake
         FILES_MATCHING PATTERN "*.cmake"
 )
 
+INSTALL(DIRECTORY ${INSTALL_WINDOWS_x86}/bin/
+        DESTINATION windows_x86/bin
+)
+
 
 #-----------------------------------------------------------------------------
 #
@@ -67,6 +71,10 @@ INSTALL(DIRECTORY ${INSTALL_WINDOWS_x86_64}/include/
 INSTALL(DIRECTORY ${INSTALL_WINDOWS_x86_64}/cmake
         DESTINATION windows_x86_64/dev
         FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_WINDOWS_x86_64}/bin/
+        DESTINATION windows_x86_64/bin
 )
 
 
@@ -88,6 +96,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1204_x86}/cmake
         FILES_MATCHING PATTERN "*.cmake"
 )
 
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1204_x86}/bin/
+        DESTINATION ubuntu_1204_x86/bin
+)
+
 
 #-----------------------------------------------------------------------------
 #
@@ -105,6 +117,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1204_x86_64}/include/
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1204_x86_64}/cmake
         DESTINATION ubuntu_1204_x86_64/dev
         FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1204_x86_64}/bin/
+        DESTINATION ubuntu_1204_x86_64/bin
 )
 
 
@@ -126,6 +142,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1404_x86}/cmake
         FILES_MATCHING PATTERN "*.cmake"
 )
 
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1404_x86}/bin/
+        DESTINATION ubuntu_1404_x86/bin
+)
+
 
 #-----------------------------------------------------------------------------
 #
@@ -143,6 +163,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1404_x86_64}/include/
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1404_x86_64}/cmake
         DESTINATION ubuntu_1404_x86_64/dev
         FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1404_x86_64}/bin/
+        DESTINATION ubuntu_1404_x86_64/bin
 )
 
 
@@ -164,6 +188,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86}/cmake
         FILES_MATCHING PATTERN "*.cmake"
 )
 
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86}/bin/
+        DESTINATION ubuntu_1604_x86/bin
+)
+
 
 #-----------------------------------------------------------------------------
 #
@@ -181,6 +209,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86_64}/include/
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86_64}/cmake
         DESTINATION ubuntu_1604_x86_64/dev
         FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86_64}/bin/
+        DESTINATION ubuntu_1604_x86_64/bin
 )
 
 
@@ -202,6 +234,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/cmake
         FILES_MATCHING PATTERN "*.cmake"
 )
 
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/bin/
+        DESTINATION ubuntu_1610_x86/bin
+)
+
 
 #-----------------------------------------------------------------------------
 #
@@ -219,6 +255,10 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/include/
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/cmake
         DESTINATION ubuntu_1610_x86_64/dev
         FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/bin/
+        DESTINATION ubuntu_1610_x86_64/bin
 )
 
 
