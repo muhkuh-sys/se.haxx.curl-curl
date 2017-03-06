@@ -63,27 +63,61 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(GNUTLS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/gnutls/install)
 	MESSAGE("GNUTLS_DIR: ${GNUTLS_DIR}")
 
-
-	ExternalProject_Add(TARGET_libcurl
-	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
-	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.bz2
-	                    URL_HASH SHA1=f02a14bbe580d2a8cf3bf45a79d39eb595220ac7
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=-I${LIBSSH2_DIR}/include -I${LIBGCRYPT_DIR}/include -I${LIBNETTLE_DIR}/include -I${LIBGMP_DIR}/include -I${ZLIB_DIR}/include" "LDFLAGS=-L${LIBSSH2_DIR}/lib -L${LIBGCRYPT_DIR}/lib -L${LIBNETTLE_DIR}/lib -L${LIBGMP_DIR}/lib -L${ZLIB_DIR}/lib" "LIBS=-lssh2 -lgcrypt ${GNUTLS_LINKFLAGS} -lhogweed -lnettle -lgmp -lz" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-tls-srp --with-zlib=${ZLIB_DIR} --without-ssl --without-winssl --without-gssapi --with-gnutls=${GNUTLS_DIR} --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
-	                    BUILD_COMMAND make
-	                    INSTALL_COMMAND make install
-	)
-
 	SET(LIBLIST "")
+	SET(INCLIST "")
+	SET(LDLIST "")
+
+	# Link to libssh2.
 	LIST(APPEND LIBLIST "-lssh2")
+	LIST(APPEND INCLIST "-I${LIBSSH2_DIR}/include")
+	LIST(APPEND LDLIST  "-L${LIBSSH2_DIR}/lib")
+
+	# Link to libgcrypt (needed by libssh2).
 	LIST(APPEND LIBLIST "-lgcrypt")
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		LIST(APPEND LIBLIST "-lcrypt32")
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	LIST(APPEND LIBLIST "-lhogweed")
-	LIST(APPEND LIBLIST "-lnettle")
+	LIST(APPEND INCLIST "-I${LIBGCRYPT_DIR}/include")
+	LIST(APPEND LDLIST  "-L${LIBGCRYPT_DIR}/lib")
+
+	# Link to libgpg-error (needed by libgcrypt).
 	LIST(APPEND LIBLIST "-lgpg-error")
-	LIST(APPEND LIBLIST "-lgmp")
+	LIST(APPEND INCLIST "-I${LIBGPG_ERROR_DIR}/include")
+	LIST(APPEND LDLIST  "-L${LIBGPG_ERROR_DIR}/lib")
+
+	# Windows uses WinSSL to get access to the system certificate store.
+	# Unix systems use GnuTLS with Nettle.
+	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		SET(SSL_ENGINE0 "--without-ssl")
+		SET(SSL_ENGINE1 "--with-winssl")
+		SET(SSL_ENGINE2 "--without-gnutls")
+
+		LIST(APPEND LIBLIST "-lcrypt32")
+	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		SET(SSL_ENGINE0 "--without-ssl")
+		SET(SSL_ENGINE1 "--without-winssl")
+		SET(SSL_ENGINE2 "--with-gnutls=${GNUTLS_DIR}")
+
+		# Link to libgnutls.
+		LIST(APPEND LIBLIST "-lgnutls")
+		LIST(APPEND INCLIST "-I${GNUTLS_DIR}/include")
+		LIST(APPEND LDLIST  "-L${GNUTLS_DIR}/lib")
+
+		# Link to nettle.
+		LIST(APPEND LIBLIST "-lhogweed")
+		LIST(APPEND LIBLIST "-lnettle")
+		LIST(APPEND INCLIST "-I${LIBNETTLE_DIR}/include")
+		LIST(APPEND LDLIST  "-L${LIBNETTLE_DIR}/lib")
+
+		# Link to libgmp (needed by nettle).
+		LIST(APPEND LIBLIST "-lgmp")
+		LIST(APPEND INCLIST "-I${LIBGMP_DIR}/include")
+		LIST(APPEND LDLIST  "-L${LIBGMP_DIR}/lib")
+	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+
+	# Link to zlib.
 	LIST(APPEND LIBLIST "-lz")
+	LIST(APPEND INCLIST "-I${ZLIB_DIR}/include")
+	LIST(APPEND LDLIST  "-L${ZLIB_DIR}/lib")
+
+	# Add Windows system libraries.
 	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		LIST(APPEND LIBLIST "-lmsvcrt")
 		LIST(APPEND LIBLIST "-ladvapi32")
@@ -95,6 +129,20 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 		LIST(APPEND LIBLIST "-lws2_32")
 	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 
+	STRING(REPLACE ";" " " P_LINK_LIBRARIES "${LIBLIST}")
+	STRING(REPLACE ";" " " P_INCLIST "${INCLIST}")
+	STRING(REPLACE ";" " " P_LDLIST "${LDLIST}")
+
+	ExternalProject_Add(TARGET_libcurl
+	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
+	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.bz2
+	                    URL_HASH SHA1=f02a14bbe580d2a8cf3bf45a79d39eb595220ac7
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
+	                    BUILD_COMMAND make
+	                    INSTALL_COMMAND make install
+	)
+
+
 
 	INCLUDE(CMakePackageConfigHelpers)
 
@@ -103,7 +151,6 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(P_LIBRARY_NAME "libcurl.a")
 	SET(INCLUDE_INSTALL_DIR "include")
 	SET(LIB_NAME "curl")
-	STRING(REPLACE ";" " " P_LINK_LIBRARIES "${LIBLIST}")
 	CONFIGURE_PACKAGE_CONFIG_FILE(config.cmake.in
 	                              "${CMAKE_CURRENT_BINARY_DIR}/package/${PROJECT_NAME}-config.cmake"
 	                              INSTALL_DESTINATION cmake
@@ -118,10 +165,21 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	        DESTINATION cmake
 	        COMPONENT Devel
 	)
-	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBGPG_ERROR_DIR}/lib/libgpg-error.a ${LIBSSH2_LIBRARY} ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBGPG_ERROR_DIR}/lib/libgpg-error.a ${LIBSSH2_LIBRARY}
 	        DESTINATION lib
 	)
+	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		# No additional libraries.
+	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		# Install libgnutls, nettle and libgmp.
+		INSTALL(FILES ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
+		        DESTINATION lib
+		)
+	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/install/include/
 	        DESTINATION include
+	)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/install/bin/
+	        DESTINATION bin
 	)
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
