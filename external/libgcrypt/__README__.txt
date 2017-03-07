@@ -1,0 +1,1 @@
+libgcrypt from https://www.gnu.org/software/libgcrypt .
