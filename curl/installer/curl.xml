@@ -9,6 +9,8 @@
 		<author name="Daniel Stenberg" url="http://curl.haxx.se" />
 		<description>
 			Curl is a command line tool for transferring data specified with URL syntax.
+			The windows version in this artifact is build with WinSSL, libgpg-error, libgcrypt and libssh2.
+			The linux version is build with libgmp, libnettle, gnutls, libgpg-error, libgcrypt and libssh2.
 		</description>
 	</info>
 	<build-dependencies>
