@@ -275,7 +275,7 @@ CONFIGURE_FILE(curl.xml
 # Filter the pom.xml file.
 #
 SET(POM_ARTIFACT_ID  "curl")
-SET(POM_GROUP_ID     "se.haxx.curl")
+SET(POM_GROUP_ID     "se.haxx")
 SET(POM_VERSION      "${PROJECT_VERSION}")
 SET(POM_PACKAGING    "zip")
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/pom.xml ${CPACK_OUTPUT_FILE_PREFIX}/pom.xml)
