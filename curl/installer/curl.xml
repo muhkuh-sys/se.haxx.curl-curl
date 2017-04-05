@@ -13,8 +13,7 @@
 			The linux version is build with libgmp, libnettle, gnutls, libgpg-error, libgcrypt and libssh2.
 		</description>
 	</info>
-	<build-dependencies>
-		<dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.8.1"/>
-	</build-dependencies>
+	<dependencies>
+		<build-dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.8.1"/>
 	<dependencies/>
 </jonchki-artifact>
