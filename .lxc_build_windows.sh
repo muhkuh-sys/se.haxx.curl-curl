@@ -27,7 +27,7 @@ lxc exec ${CONTAINER} -- bash -c 'mount --bind /tmp/build /tmp/work/build'
 lxc exec ${CONTAINER} -- bash -c 'apt-get update --assume-yes'
 
 # Install the project specific packages.
-lxc exec ${CONTAINER} -- bash -c 'apt-get install --assume-yes lua5.1 lua-filesystem lua-expat lua51-mhash lua-curl lua-zip gettext groff-base m4 pkg-config'
+lxc exec ${CONTAINER} -- bash -c 'apt-get install --assume-yes lua5.1 lua-filesystem lua-expat lua51-mhash lua-sql-sqlite3 gettext groff-base m4 pkg-config'
 
 # Build the 32bit version.
 lxc exec ${CONTAINER} -- bash -c 'export PATH=/usr/mingw-w64-i686/bin:${PATH} && cd /tmp/work && bash .build01_windows32.sh'
