@@ -46,4 +46,6 @@ pushd build/se.haxx.curl-curl
 cmake -DCMAKE_INSTALL_PREFIX="" ../../curl/installer
 make
 make package
+python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/se/haxx/curl/*/curl-*.xml
+python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/se/haxx/curl/*/curl-*.tar.xz
 popd
