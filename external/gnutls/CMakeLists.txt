@@ -32,8 +32,8 @@ MESSAGE("LIBGMP_LIBRARY: ${LIBGMP_LIBRARY}")
 MESSAGE("LIBNETTLE_PREFIX: ${LIBNETTLE_PREFIX}")
 ExternalProject_Add(TARGET_gnutls
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gnutls
-                    URL ${CMAKE_CURRENT_SOURCE_DIR}/gnutls-3.5.9.tar.xz
-                    URL_HASH SHA1=f3f184a92f128af1c2fb29b29a4d325af65694a5
+                    URL ${CMAKE_CURRENT_SOURCE_DIR}/gnutls-3.5.13.tar.xz
+                    URL_HASH SHA1=0cf738a968faf0461e9709b3ee0f64157ce040b3
                     CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "GMP_CFLAGS=-I${LIBGMP_INCLUDE_DIR}" "GMP_LIBS=-L${LIBGMP_LIBRARY_DIR}" "PKG_CONFIG_PATH=${LIBNETTLE_PREFIX}/lib/pkgconfig" ${CMAKE_CURRENT_BINARY_DIR}/gnutls/src/TARGET_gnutls/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --disable-tools --disable-tests --enable-static=yes --enable-shared=no --with-pic --with-included-libtasn1 --with-included-unistring --without-p11-kit --without-idn ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
