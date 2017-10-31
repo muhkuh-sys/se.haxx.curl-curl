@@ -42,19 +42,6 @@ elseif strDistId=='ubuntu' then
       tResult = true
     end
 
-  elseif strDistVersion=='16.10' then
-    if strCpuArch=='x86' then
-      t:install_dev('ubuntu_1610_x86/dev/include',    '${install_dev_include}/')
-      t:install_dev('ubuntu_1610_x86/dev/lib',        '${install_dev_lib}/')
-      t:install_dev('ubuntu_1610_x86/dev/cmake',      '${install_dev_cmake}/')
-      tResult = true
-    elseif strCpuArch=='x86_64' then
-      t:install_dev('ubuntu_1610_x86_64/dev/include', '${install_dev_include}/')
-      t:install_dev('ubuntu_1610_x86_64/dev/lib',     '${install_dev_lib}/')
-      t:install_dev('ubuntu_1610_x86_64/dev/cmake',   '${install_dev_cmake}/')
-      tResult = true
-    end
-
   elseif strDistVersion=='17.04' then
     if strCpuArch=='x86' then
       t:install_dev('ubuntu_1704_x86/dev/include',    '${install_dev_include}/')
@@ -65,6 +52,19 @@ elseif strDistId=='ubuntu' then
       t:install_dev('ubuntu_1704_x86_64/dev/include', '${install_dev_include}/')
       t:install_dev('ubuntu_1704_x86_64/dev/lib',     '${install_dev_lib}/')
       t:install_dev('ubuntu_1704_x86_64/dev/cmake',   '${install_dev_cmake}/')
+      tResult = true
+    end
+
+  elseif strDistVersion=='17.10' then
+    if strCpuArch=='x86' then
+      t:install_dev('ubuntu_1710_x86/dev/include',    '${install_dev_include}/')
+      t:install_dev('ubuntu_1710_x86/dev/lib',        '${install_dev_lib}/')
+      t:install_dev('ubuntu_1710_x86/dev/cmake',      '${install_dev_cmake}/')
+      tResult = true
+    elseif strCpuArch=='x86_64' then
+      t:install_dev('ubuntu_1710_x86_64/dev/include', '${install_dev_include}/')
+      t:install_dev('ubuntu_1710_x86_64/dev/lib',     '${install_dev_lib}/')
+      t:install_dev('ubuntu_1710_x86_64/dev/cmake',   '${install_dev_cmake}/')
       tResult = true
     end
   end

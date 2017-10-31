@@ -10,10 +10,10 @@ SET(INSTALL_UBUNTU_1404_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_14
 SET(INSTALL_UBUNTU_1404_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1404_x86_64)
 SET(INSTALL_UBUNTU_1604_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1604_x86)
 SET(INSTALL_UBUNTU_1604_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1604_x86_64)
-SET(INSTALL_UBUNTU_1610_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1610_x86)
-SET(INSTALL_UBUNTU_1610_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1610_x86_64)
 SET(INSTALL_UBUNTU_1704_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1704_x86)
 SET(INSTALL_UBUNTU_1704_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1704_x86_64)
+SET(INSTALL_UBUNTU_1710_x86    ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1710_x86)
+SET(INSTALL_UBUNTU_1710_x86_64 ${CMAKE_CURRENT_SOURCE_DIR}/../../build/ubuntu_1710_x86_64)
 
 # Get the version from one of the packages.
 SET(CURL_DIR "${INSTALL_WINDOWS_x86}/cmake")
@@ -175,54 +175,6 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1604_x86_64}/bin/
 
 #-----------------------------------------------------------------------------
 #
-# Install the Ubuntu_1610_x86 files.
-#
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/lib/
-        DESTINATION ubuntu_1610_x86/dev/lib
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/include/
-        DESTINATION ubuntu_1610_x86/dev/include
-        FILES_MATCHING PATTERN "*.h"
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/cmake
-        DESTINATION ubuntu_1610_x86/dev
-        FILES_MATCHING PATTERN "*.cmake"
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86}/bin/
-        DESTINATION ubuntu_1610_x86/bin
-        USE_SOURCE_PERMISSIONS
-)
-
-
-#-----------------------------------------------------------------------------
-#
-# Install the Ubuntu_1610_x86_64 files.
-#
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/lib/
-        DESTINATION ubuntu_1610_x86_64/dev/lib
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/include/
-        DESTINATION ubuntu_1610_x86_64/dev/include
-        FILES_MATCHING PATTERN "*.h"
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/cmake
-        DESTINATION ubuntu_1610_x86_64/dev
-        FILES_MATCHING PATTERN "*.cmake"
-)
-
-INSTALL(DIRECTORY ${INSTALL_UBUNTU_1610_x86_64}/bin/
-        DESTINATION ubuntu_1610_x86_64/bin
-        USE_SOURCE_PERMISSIONS
-)
-
-
-#-----------------------------------------------------------------------------
-#
 # Install the Ubuntu_1704_x86 files.
 #
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1704_x86}/lib/
@@ -265,6 +217,54 @@ INSTALL(DIRECTORY ${INSTALL_UBUNTU_1704_x86_64}/cmake
 
 INSTALL(DIRECTORY ${INSTALL_UBUNTU_1704_x86_64}/bin/
         DESTINATION ubuntu_1704_x86_64/bin
+        USE_SOURCE_PERMISSIONS
+)
+
+
+#-----------------------------------------------------------------------------
+#
+# Install the Ubuntu_1710_x86 files.
+#
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86}/lib/
+        DESTINATION ubuntu_1710_x86/dev/lib
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86}/include/
+        DESTINATION ubuntu_1710_x86/dev/include
+        FILES_MATCHING PATTERN "*.h"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86}/cmake
+        DESTINATION ubuntu_1710_x86/dev
+        FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86}/bin/
+        DESTINATION ubuntu_1710_x86/bin
+        USE_SOURCE_PERMISSIONS
+)
+
+
+#-----------------------------------------------------------------------------
+#
+# Install the Ubuntu_1710_x86_64 files.
+#
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86_64}/lib/
+        DESTINATION ubuntu_1710_x86_64/dev/lib
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86_64}/include/
+        DESTINATION ubuntu_1710_x86_64/dev/include
+        FILES_MATCHING PATTERN "*.h"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86_64}/cmake
+        DESTINATION ubuntu_1710_x86_64/dev
+        FILES_MATCHING PATTERN "*.cmake"
+)
+
+INSTALL(DIRECTORY ${INSTALL_UBUNTU_1710_x86_64}/bin/
+        DESTINATION ubuntu_1710_x86_64/bin
         USE_SOURCE_PERMISSIONS
 )
 

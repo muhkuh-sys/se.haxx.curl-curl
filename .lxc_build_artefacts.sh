@@ -28,10 +28,10 @@ lxc file push build/build_ubuntu_1404_x86.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_ubuntu_1404_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_ubuntu_1604_x86.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_ubuntu_1604_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
-lxc file push build/build_ubuntu_1610_x86.tar.gz ${CONTAINER}/tmp/work/build/
-lxc file push build/build_ubuntu_1610_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_ubuntu_1704_x86.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_ubuntu_1704_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
+lxc file push build/build_ubuntu_1710_x86.tar.gz ${CONTAINER}/tmp/work/build/
+lxc file push build/build_ubuntu_1710_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_windows_x86.tar.gz ${CONTAINER}/tmp/work/build/
 lxc file push build/build_windows_x86_64.tar.gz ${CONTAINER}/tmp/work/build/
 
