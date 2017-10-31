@@ -7,7 +7,7 @@ INCLUDE(ExternalProject)
 # Python is needed for the patch tool.
 FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
-SET(VERSION_EXTERNAL "7.54.1")
+SET(VERSION_EXTERNAL "7.56.1")
 SET(VERSION_PACKAGE  "1")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
 
@@ -136,7 +136,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ExternalProject_Add(TARGET_libcurl
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.bz2
-	                    URL_HASH SHA1=f5193316e4b5ff23505cb09bc946763d35d02cd6
+	                    URL_HASH SHA1=c26bd88fdd5fe5d31a3b9e7a0a6b3dffff3168df
 	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
