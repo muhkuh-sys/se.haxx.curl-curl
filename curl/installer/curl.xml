@@ -15,6 +15,6 @@
 		</description>
 	</info>
 	<dependencies>
-		<build-dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.11.1"/>
+		<build-dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.11.2"/>
 	</dependencies>
 </jonchki-artifact>
