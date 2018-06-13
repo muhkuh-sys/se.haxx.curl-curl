@@ -29,8 +29,8 @@ ENDIF(${CMAKE_CROSSCOMPILING})
 
 ExternalProject_Add(TARGET_libgcrypt
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libgcrypt
-                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgcrypt-1.8.1.tar.bz2
-                    URL_HASH SHA1=dd35f00da45602afe81e01f4d60c40bbdd826fe6
+                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgcrypt-1.8.3.tar.bz2
+                    URL_HASH SHA1=13bd2ce69e59ab538e959911dfae80ea309636e3
                     CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libgcrypt/src/TARGET_libgcrypt/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --with-libgpg-error-prefix=${LIBGPGERROR_PREFIX} ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install

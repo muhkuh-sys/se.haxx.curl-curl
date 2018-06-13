@@ -29,8 +29,8 @@ ENDIF(${CMAKE_CROSSCOMPILING})
 
 ExternalProject_Add(TARGET_libgpg_error
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libgpg-error
-                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgpg-error-1.27.tar.bz2
-                    URL_HASH SHA1=a428758999ff573e62d06892e3d2c0b0f335787c
+                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgpg-error-1.31.tar.bz2
+                    URL_HASH SHA1=2bafad316d4e3e12bae4822b14ed9020090e6acf
                     CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libgpg-error/src/TARGET_libgpg_error/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install

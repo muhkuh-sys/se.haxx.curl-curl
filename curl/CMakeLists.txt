@@ -7,7 +7,7 @@ INCLUDE(ExternalProject)
 # Python is needed for the patch tool.
 FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
-SET(VERSION_EXTERNAL "7.56.1")
+SET(VERSION_EXTERNAL "7.60.0")
 SET(VERSION_PACKAGE  "1")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
 
@@ -136,7 +136,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ExternalProject_Add(TARGET_libcurl
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.xz
-	                    URL_HASH SHA1=c26bd88fdd5fe5d31a3b9e7a0a6b3dffff3168df
+	                    URL_HASH SHA1=3f5774bb004b4ebd2ec8732fed13d45cf59bad54
 	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
@@ -182,4 +182,66 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	        DESTINATION bin
 	        USE_SOURCE_PERMISSIONS
 	)
+
+	#----------------------------------------------------------------------------
+	#
+	# Build a package for the selected platform.
+	#
+
+	SET(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/targets/jonchki/repository/se/haxx/curl/curl/${PROJECT_VERSION})
+	SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY FALSE)
+	SET(CPACK_PACKAGE_FILE_NAME "curl-${PROJECT_VERSION}-${JONCHKI_PLATFORM}")
+
+	SET(CPACK_GENERATOR "TXZ")
+	INCLUDE(CPack)
+
+	IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+		# Package a windows build.
+
+		CONFIGURE_FILE(installer/install_windows.lua
+		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+		               @ONLY)
+
+		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+		        DESTINATION .)
+	ELSE(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+		# Package a linux build.
+
+		CONFIGURE_FILE(installer/install_linux.lua
+		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+		               @ONLY)
+
+		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+		        DESTINATION .)
+	ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+
+	CONFIGURE_FILE(installer/curl.xml
+	               ${CPACK_OUTPUT_FILE_PREFIX}/curl-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
+	               @ONLY)
+
+
+	#-----------------------------------------------------------------------------
+	#
+	# Create a custom target named "pack".
+	# It builds the package and creates the hashes.
+	#
+	ADD_CUSTOM_TARGET(pack
+	                  COMMAND ${CMAKE_MAKE_PROGRAM}
+	                  COMMAND ${CMAKE_MAKE_PROGRAM} package
+	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/curl-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
+	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/curl-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.tar.xz
+	                  COMMENT "Pack the artifact and generate the hashes...")
+
+
+	#-----------------------------------------------------------------------------
+	#
+	# Filter the pom.xml file.
+	#
+	SET(POM_ARTIFACT_ID  "curl")
+	SET(POM_GROUP_ID     "se.haxx.curl")
+	SET(POM_VERSION      "${PROJECT_VERSION}")
+	SET(POM_PACKAGING    "tar.xz")
+	CONFIGURE_FILE(installer/pom.xml
+	               ${CPACK_OUTPUT_FILE_PREFIX}/curl-${PROJECT_VERSION}.pom
+	               @ONLY)
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
