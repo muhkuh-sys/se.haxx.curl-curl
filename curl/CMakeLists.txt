@@ -25,20 +25,37 @@ CONFIGURE_FILE(installer/curl.xml
 #
 
 IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
+	#----------------------------------------------------------------------------
+	#
+	# Construct the host ID for the configure command.
+	#
 	IF(${CMAKE_CROSSCOMPILING})
-		IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 			# Get the prefix of the compiler.
 			GET_FILENAME_COMPONENT(GCC_BASENAME ${CMAKE_C_COMPILER} NAME)
-			IF(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
-				SET(CONFIGURE_HOST "--host=${CMAKE_MATCH_1}")
-			ELSE(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+			IF(GCC_BASENAME MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+				SET(CONFIGURE_HOST "${CMAKE_MATCH_1}")
+			ELSE(GCC_BASENAME MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
 				MESSAGE(FATAL_ERROR "Failed to extract the compiler prefix from the C compiler ${CMAKE_C_COMPILER}")
-			ENDIF(${GCC_BASENAME} MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
-		ELSE("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-			MESSAGE(FATAL_ERROR "Cross compiling detected, but not using GCC. This is currently not supported by the CMake wrapper for OpenSSL.")
-		ENDIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+			ENDIF(GCC_BASENAME MATCHES "([^-]+-[^-]+-[^-]+)-gcc")
+		ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+			MESSAGE(FATAL_ERROR "Cross compiling detected, but not using GCC. This is currently not supported.")
+		ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	ELSE(${CMAKE_CROSSCOMPILING})
-		SET(CONFIGURE_HOST "")
+		# Set the host even if not cross compiling.
+		# Otherwise GNUTLS detects the CPU and tries to build with special
+		# support for it. In the first place this sounds very nice. But it
+		# fails on a 32bit OS running on a 64bit CPU - which is the case for
+		# Docker 32bit images.
+		IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+			IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+				SET(CONFIGURE_HOST "${JONCHKI_PLATFORM_CPU_ARCH}-pc-linux-gnu")
+			ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+				MESSAGE(FATAL_ERROR "Trying to detect the system with a non-GCC compiler. This is currently not supported.")
+			ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		ELSE(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+			MESSAGE(FATAL_ERROR "Trying to detect the system on a non-linux OS. This is currently not supported.")
+		ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	ENDIF(${CMAKE_CROSSCOMPILING})
 
 	# Get the includes and library for libssh2.
@@ -137,7 +154,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.xz
 	                    URL_HASH SHA1=3f5774bb004b4ebd2ec8732fed13d45cf59bad54
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} ${CONFIGURE_HOST}
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --host=${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
