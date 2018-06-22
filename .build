@@ -91,11 +91,12 @@ PATH=${TOOLS_PATH} cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX
 PATH=${TOOLS_PATH} make
 ${JONCHKI} install-dependencies --syscfg ${PRJ_DIR}/jonchki/jonchkisys.cfg --prjcfg ${PRJ_DIR}/jonchki/jonchkicfg.xml ${JONCHKI_SYSTEM} --build-dependencies curl/curl-*.xml
 popd
+ZLIB_PREFIX="${BUILD_DIR}/build_requirements/jonchki/install/dev"
 
 
 # Build the external components.
 pushd ${BUILD_DIR}/external
-PATH=${TOOLS_PATH} cmake -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_PLATFORM} ${PRJ_DIR}/external
+PATH=${TOOLS_PATH} cmake -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_PLATFORM} -DZLIB_PREFIX=${ZLIB_PREFIX} ${PRJ_DIR}/external
 PATH=${TOOLS_PATH} make
 popd
 # Get the additional CMAKE search paths.
