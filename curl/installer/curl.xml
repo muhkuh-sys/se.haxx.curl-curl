@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jonchki-artifact version="1.0">
-	<info group="se.haxx"
+	<info group="se.haxx.curl"
 	      module="curl"
 	      artifact="curl"
 	      version="@PROJECT_VERSION@"
