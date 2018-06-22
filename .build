@@ -18,6 +18,7 @@ PRJ_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 # Check for all build dependencies.
 declare -a -r astrDeb=(
+	"autogen"
 	"gettext"
 	"groff-base"
 	"lua5.1"
