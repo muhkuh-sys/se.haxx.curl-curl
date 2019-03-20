@@ -7,7 +7,7 @@ INCLUDE(ExternalProject)
 # Python is used for some test scripts.
 FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
-SET(VERSION_EXTERNAL "1.8.0")
+SET(VERSION_EXTERNAL "1.8.1")
 
 
 #----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ LIST(APPEND PRJ_CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=''")
 ExternalProject_Add(TARGET_libssh2
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libssh2-${VERSION_EXTERNAL}
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/libssh2-${VERSION_EXTERNAL}.tar.gz
-                    URL_HASH SHA1=baf2d1fb338eee531ba9b6b121c64235e089e0f5
+                    URL_HASH SHA1=a6c8334b1c31eecb335a7f7f43278636e2033e9f
                     PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/libssh2-${VERSION_EXTERNAL}/src/TARGET_libssh2 --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
                     CMAKE_ARGS ${PRJ_CMAKE_ARGS}
                     INSTALL_COMMAND make install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
