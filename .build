@@ -51,16 +51,19 @@ if [ "$TARGET" == "linux" ]; then
 	TOOLS_PATH=${PATH}
 
 elif [ "$TARGET" == "windows32" ]; then
-	CMAKE_COMPILER="-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=i686-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=i686-w64-mingw32-g++ -DCMAKE_RC_COMPILER=i686-w64-mingw32-windres"
+	CMAKE_CROSS_COMPILER="-DCMAKE_TOOLCHAIN_FILE=${PRJ_DIR}/cmake/toolchainfiles/toolchain_windows_32.cmake"
 	CMAKE_PLATFORM="-DJONCHKI_PLATFORM_DIST_ID=windows -DJONCHKI_PLATFORM_DIST_VERSION="" -DJONCHKI_PLATFORM_CPU_ARCH=x86"
 	JONCHKI_SYSTEM="--distribution-id windows --empty-distribution-version --cpu-architecture x86"
-	TOOLS_PATH=/usr/mingw-w64-i686/bin:${PATH}
 
 elif [ "$TARGET" == "windows64" ]; then
-	CMAKE_COMPILER="-DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_RC_COMPILER=x86_64-w64-mingw32-windres"
+	CMAKE_CROSS_COMPILER="-DCMAKE_TOOLCHAIN_FILE=${PRJ_DIR}/cmake/toolchainfiles/toolchain_windows_64.cmake"
 	CMAKE_PLATFORM="-DJONCHKI_PLATFORM_DIST_ID=windows -DJONCHKI_PLATFORM_DIST_VERSION="" -DJONCHKI_PLATFORM_CPU_ARCH=x86_64"
 	JONCHKI_SYSTEM="--distribution-id windows --empty-distribution-version --cpu-architecture x86_64"
-	TOOLS_PATH=/usr/mingw-w64-x86_64/bin:${PATH}
+
+elif [ "$TARGET" == "raspberry" ]; then
+	CMAKE_CROSS_COMPILER="-DCMAKE_TOOLCHAIN_FILE=${PRJ_DIR}/cmake/toolchainfiles/toolchain_ubuntu_arm64.cmake"
+	CMAKE_PLATFORM="-DJONCHKI_PLATFORM_DIST_ID=ubuntu -DJONCHKI_PLATFORM_DIST_VERSION=18.04 -DJONCHKI_PLATFORM_CPU_ARCH=arm64"
+	JONCHKI_SYSTEM="--distribution-id ubuntu --distribution-version 18.04 --cpu-architecture arm64"
 
 else
 	echo "Unknown build target: ${TARGET}"
@@ -88,8 +91,8 @@ fi
 # Get the build requirements.
 pushd ${BUILD_DIR}/build_requirements
 rm -f curl/curl-*.xml
-PATH=${TOOLS_PATH} cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_PLATFORM} ${PRJ_DIR}
-PATH=${TOOLS_PATH} make
+cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_CROSS_COMPILER} ${CMAKE_PLATFORM} ${PRJ_DIR}
+make
 ${JONCHKI} install-dependencies --syscfg ${PRJ_DIR}/jonchki/jonchkisys.cfg --prjcfg ${PRJ_DIR}/jonchki/jonchkicfg.xml ${JONCHKI_SYSTEM} --build-dependencies curl/curl-*.xml
 popd
 ZLIB_PREFIX="${BUILD_DIR}/build_requirements/jonchki/install/dev"
@@ -97,8 +100,8 @@ ZLIB_PREFIX="${BUILD_DIR}/build_requirements/jonchki/install/dev"
 
 # Build the external components.
 pushd ${BUILD_DIR}/external
-PATH=${TOOLS_PATH} cmake -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_PLATFORM} -DZLIB_PREFIX=${ZLIB_PREFIX} ${PRJ_DIR}/external
-PATH=${TOOLS_PATH} make
+cmake -DCMAKE_INSTALL_PREFIX="" ${CMAKE_CROSS_COMPILER} ${CMAKE_PLATFORM} -DZLIB_PREFIX=${ZLIB_PREFIX} ${PRJ_DIR}/external
+make
 popd
 # Get the additional CMAKE search paths.
 CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/libssh2' -Dnet.zlib-zlib_DIR='${BUILD_DIR}/build_requirements/jonchki/install/dev/cmake' -DLIBGMP_DIR='${BUILD_DIR}/external/gmp/install' -DLIBNETTLE_DIR='${BUILD_DIR}/external/libnettle/install' -DLIBGCRYPT_DIR=${BUILD_DIR}/external/libgcrypt/install -DLIBGPG_ERROR_DIR=${BUILD_DIR}/external/libgpg-error/install"
@@ -106,6 +109,6 @@ CMAKE_MODULES="-DLibSSH2_DIR='${BUILD_DIR}/external/libssh2/install/lib/cmake/li
 
 # Build curl.
 pushd ${BUILD_DIR}/curl
-PATH=${TOOLS_PATH} cmake -DBUILDCFG_ONLY_JONCHKI_CFG="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_PLATFORM} ${CMAKE_MODULES} ${PRJ_DIR}
-PATH=${TOOLS_PATH} make pack
+cmake -DBUILDCFG_ONLY_JONCHKI_CFG="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_CROSS_COMPILER} ${CMAKE_PLATFORM} ${CMAKE_MODULES} ${PRJ_DIR}
+make pack
 popd
