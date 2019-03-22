@@ -1,0 +1,14 @@
+diff -uNr libssh2-1.8.1/CMakeLists.txt libssh2-1.8.1_patched/CMakeLists.txt
+--- libssh2-1.8.1/CMakeLists.txt	2016-08-20 17:37:25.000000000 +0200
++++ libssh2-1.8.1_patched/CMakeLists.txt	2019-03-22 18:37:51.557914175 +0100
+@@ -49,6 +49,10 @@
+   set (CMAKE_C_STANDARD 90)
+ endif()
+ 
++if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
++  set (CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
++endif()
++
+ option(BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+ 
+ # Parse version
