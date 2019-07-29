@@ -15,8 +15,8 @@ MESSAGE("LIBNETTLE_PREFIX: ${LIBNETTLE_PREFIX}")
 MESSAGE("CONFIGURE_HOST: ${CONFIGURE_HOST}")
 ExternalProject_Add(TARGET_gnutls
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gnutls
-                    URL ${CMAKE_CURRENT_SOURCE_DIR}/gnutls-3.6.6.tar.xz
-                    URL_HASH SHA1=d094f3c554b40d76dac2d2d75a8a141c008dc6c4
+                    URL ${CMAKE_CURRENT_SOURCE_DIR}/gnutls-3.6.9.tar.xz
+                    URL_HASH SHA1=4a12757b129562ae92a01ca890ed282050595296
                     CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=-I${LIBGMP_INCLUDE_DIR}" "LDFLAGS=-L${LIBGMP_LIBRARY_DIR}" "PKG_CONFIG_PATH=${LIBNETTLE_PREFIX}/lib/pkgconfig" ${CMAKE_CURRENT_BINARY_DIR}/gnutls/src/TARGET_gnutls/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --disable-tools --disable-tests --enable-static=yes --enable-shared=no --with-pic --with-included-libtasn1 --with-included-unistring --without-p11-kit --without-idn --host=${CONFIGURE_HOST} --with-libz-prefix=${ZLIB_PREFIX}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
