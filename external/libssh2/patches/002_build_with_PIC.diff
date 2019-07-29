@@ -1,6 +1,6 @@
-diff -uNr libssh2-1.8.1/CMakeLists.txt libssh2-1.8.1_patched/CMakeLists.txt
---- libssh2-1.8.1/CMakeLists.txt	2016-08-20 17:37:25.000000000 +0200
-+++ libssh2-1.8.1_patched/CMakeLists.txt	2019-03-22 18:37:51.557914175 +0100
+diff -uNr libssh2-1.9.0/CMakeLists.txt libssh2-1.9.0_patched/CMakeLists.txt
+--- libssh2-1.9.0/CMakeLists.txt	2016-08-20 17:37:25.000000000 +0200
++++ libssh2-1.9.0_patched/CMakeLists.txt	2019-07-29 12:52:52.250948319 +0200
 @@ -49,6 +49,10 @@
    set (CMAKE_C_STANDARD 90)
  endif()
