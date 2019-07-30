@@ -1,0 +1,36 @@
+diff -uNr gnutls-3.6.9/lib/accelerated/x86/x86-common.c gnutls-3.6.9_patched/lib/accelerated/x86/x86-common.c
+--- gnutls-3.6.9/lib/accelerated/x86/x86-common.c	2019-06-28 21:06:07.000000000 +0200
++++ gnutls-3.6.9_patched/lib/accelerated/x86/x86-common.c	2019-07-30 16:41:15.254762949 +0200
+@@ -40,6 +40,32 @@
+ #include <aes-padlock.h>
+ #ifdef HAVE_CPUID_H
+ # include <cpuid.h>
++
++/* Check if the bit_CLZERO is already present. If not, add the missing components. */
++# ifndef bit_CLZERO
++
++#define __cpuid_count(level, count, a, b, c, d)         \
++  __asm__ ("cpuid\n\t"                                  \
++           : "=a" (a), "=b" (b), "=c" (c), "=d" (d)     \
++           : "0" (level), "2" (count))
++
++static __inline int
++__get_cpuid_count (unsigned int __leaf, unsigned int __subleaf,
++                   unsigned int *__eax, unsigned int *__ebx,
++                   unsigned int *__ecx, unsigned int *__edx)
++{
++  unsigned int __ext = __leaf & 0x80000000;
++  unsigned int __maxlevel = __get_cpuid_max (__ext, 0);
++
++  if (__maxlevel == 0 || __maxlevel < __leaf)
++    return 0;
++
++  __cpuid_count (__leaf, __subleaf, *__eax, *__ebx, *__ecx, *__edx);
++  return 1;
++}
++
++# endif
++
+ #else
+ # define __get_cpuid(...) 0
+ # define __get_cpuid_count(...) 0
