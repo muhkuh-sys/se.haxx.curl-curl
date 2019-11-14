@@ -245,6 +245,7 @@ astrCmd = [
     '-DPRJ_DIR=%s' % strCfg_projectFolder
 ]
 astrCmd.extend(astrCMAKE_COMPILER)
+astrCmd.extend(astrCMAKE_PLATFORM)
 astrCmd.append(os.path.join(strCfg_projectFolder, 'external'))
 strCwd = os.path.join(strCfg_workingFolder, 'external')
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
