@@ -80,6 +80,7 @@ if tPlatform['host_distribution_id'] == 'ubuntu':
     # Check for all system dependencies.
     astrDeb = [
         'autogen',
+        'dpkg-dev',
         'gettext',
         'groff-base',
         'm4',
