@@ -11,8 +11,8 @@ INCLUDE(ExternalProject)
 #
 ExternalProject_Add(TARGET_libgpg_error
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libgpg-error
-                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgpg-error-1.37.tar.bz2
-                    URL_HASH SHA1=6dff83371e0c03fe9ba468cc23d528a8c247785a
+                    URL ${CMAKE_CURRENT_SOURCE_DIR}/libgpg-error-1.45.tar.bz2
+                    URL_HASH SHA1=fe724ed37b4935964059a47b7c64d5f8246659d8
                     CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libgpg-error/src/TARGET_libgpg_error/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --host=${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
