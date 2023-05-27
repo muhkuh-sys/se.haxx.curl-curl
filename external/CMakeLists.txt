@@ -43,6 +43,11 @@ ENDIF(${CMAKE_CROSSCOMPILING})
 #
 # Include the projects in the subdirectories.
 #
+
+# libidn2 needs libiconv and libunistring.
+ADD_SUBDIRECTORY(libiconv)
+ADD_SUBDIRECTORY(libidn2)
+
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	# Windows uses WinSSL.
 ELSE(CMAKE_SYSTEM_NAME STREQUAL "Windows")

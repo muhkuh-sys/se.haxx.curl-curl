@@ -1,0 +1,1 @@
+This is libidn2 from https://www.gnu.org/software/libidn/ .
