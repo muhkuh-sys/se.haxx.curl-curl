@@ -70,4 +70,6 @@ ADD_SUBDIRECTORY(libgcrypt)
 # libssh2 depends on gcrypt.
 ADD_SUBDIRECTORY(libssh2)
 
+ADD_SUBDIRECTORY(nghttp2)
+
 #----------------------------------------------------------------------------

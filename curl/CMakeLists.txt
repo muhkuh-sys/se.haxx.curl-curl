@@ -86,6 +86,9 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(LIBIDN2_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/libidn2/install)
 	MESSAGE("LIBIDN2_DIR: ${LIBIDN2_DIR}")
 
+	SET(NGHTTP2_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/nghttp2/install)
+	MESSAGE("NGHTTP2_DIR: ${NGHTTP2_DIR}")
+
 	SET(LIBLIST "")
 	SET(INCLIST "")
 	SET(LDLIST "")
@@ -165,7 +168,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.xz
 	                    URL_HASH SHA1=44a8e2115a8cefb52959d17d6a647389db9e389d
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --with-libidn2 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt --enable-websockets --host=${CONFIGURE_HOST}
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --with-libidn2 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt --enable-websockets --with-nghttp2=${NGHTTP2_DIR} --host=${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
