@@ -7,7 +7,7 @@ INCLUDE(ExternalProject)
 # Python is needed for the patch tool.
 FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
-SET(VERSION_EXTERNAL "7.82.0")
+SET(VERSION_EXTERNAL "8.1.1")
 SET(VERSION_PACKAGE  "1")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
 
@@ -102,15 +102,11 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Windows uses WinSSL to get access to the system certificate store.
 	# Unix systems use GnuTLS with Nettle.
 	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		SET(SSL_ENGINE0 "--without-ssl")
-		SET(SSL_ENGINE1 "--with-winssl")
-		SET(SSL_ENGINE2 "--without-gnutls")
+		SET(SSL_ENGINE "--with-schannel")
 
 		LIST(APPEND LIBLIST "-lcrypt32")
 	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		SET(SSL_ENGINE0 "--without-ssl")
-		SET(SSL_ENGINE1 "--without-winssl")
-		SET(SSL_ENGINE2 "--with-gnutls=${GNUTLS_DIR}")
+		SET(SSL_ENGINE "--with-gnutls=${GNUTLS_DIR}")
 
 		# Link to libgnutls.
 		LIST(APPEND LIBLIST "-lgnutls")
@@ -153,8 +149,8 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ExternalProject_Add(TARGET_libcurl
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.xz
-	                    URL_HASH SHA1=1da2b0a398a40b1b7e950940de21bc5e6dd8d622
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE0} ${SSL_ENGINE1} ${SSL_ENGINE2} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --host=${CONFIGURE_HOST}
+	                    URL_HASH SHA1=44a8e2115a8cefb52959d17d6a647389db9e389d
+	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --host=${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
