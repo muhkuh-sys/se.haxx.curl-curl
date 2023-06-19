@@ -213,7 +213,6 @@ else:
 # Create the folders if they do not exist yet.
 astrFolders = [
     strCfg_workingFolder,
-    os.path.join(strCfg_workingFolder, 'external'),
     os.path.join(strCfg_workingFolder, 'build_requirements'),
     os.path.join(strCfg_workingFolder, 'curl')
 ]
@@ -277,35 +276,35 @@ astrCmd.append(astrMatch[0])
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 
 astrCMAKE_COMPILER.append('-DZLIB_PREFIX=%s' % os.path.join(strCfg_workingFolder, 'build_requirements', 'jonchki', 'install', 'dev'))
+astrCMAKE_COMPILER.append('-Dnet.zlib-zlib_DIR=%s' % os.path.join(strCfg_workingFolder, 'build_requirements', 'jonchki', 'install', 'dev', 'cmake'))
 
 # ---------------------------------------------------------------------------
 #
 # Build the externals.
 #
-astrCmd = [
-    'cmake',
-    '-DCMAKE_INSTALL_PREFIX=""',
-    '-DPRJ_DIR=%s' % strCfg_projectFolder
-]
-astrCmd.extend(astrCMAKE_COMPILER)
-astrCmd.extend(astrCMAKE_PLATFORM)
-astrCmd.append(os.path.join(strCfg_projectFolder, 'external'))
-strCwd = os.path.join(strCfg_workingFolder, 'external')
-subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
-subprocess.check_call(strMake, shell=True, cwd=strCwd, env=astrEnv)
-
-astrCMAKE_COMPILER.append('-DLibSSH2_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libssh2', 'install', 'lib', 'cmake', 'libssh2'))
-astrCMAKE_COMPILER.append('-Dnet.zlib-zlib_DIR=%s' % os.path.join(strCfg_workingFolder, 'build_requirements', 'jonchki', 'install', 'dev', 'cmake'))
-astrCMAKE_COMPILER.append('-DLIBGMP_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'gmp', 'install'))
-astrCMAKE_COMPILER.append('-DLIBNETTLE_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install'))
-astrCMAKE_COMPILER.append('-DLIBGCRYPT_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libgcrypt', 'install'))
-astrCMAKE_COMPILER.append('-DLIBGPG_ERROR_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libgpg-error', 'install'))
-
-# Fix the nettle install path.
-strNettleLib64 = os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install', 'lib64')
-strNettleLib = os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install', 'lib')
-if os.path.exists(strNettleLib64) is True:
-    shutil.copytree(strNettleLib64, strNettleLib, dirs_exist_ok=True)
+#astrCmd = [
+#    'cmake',
+#    '-DCMAKE_INSTALL_PREFIX=""',
+#    '-DPRJ_DIR=%s' % strCfg_projectFolder
+#]
+#astrCmd.extend(astrCMAKE_COMPILER)
+#astrCmd.extend(astrCMAKE_PLATFORM)
+#astrCmd.append(os.path.join(strCfg_projectFolder, 'external'))
+#strCwd = os.path.join(strCfg_workingFolder, 'external')
+#subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
+#subprocess.check_call(strMake, shell=True, cwd=strCwd, env=astrEnv)
+#
+#astrCMAKE_COMPILER.append('-DLibSSH2_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libssh2', 'install', 'lib', 'cmake', 'libssh2'))
+#astrCMAKE_COMPILER.append('-DLIBGMP_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'gmp', 'install'))
+#astrCMAKE_COMPILER.append('-DLIBNETTLE_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install'))
+#astrCMAKE_COMPILER.append('-DLIBGCRYPT_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libgcrypt', 'install'))
+#astrCMAKE_COMPILER.append('-DLIBGPG_ERROR_DIR=%s' % os.path.join(strCfg_workingFolder, 'external', 'libgpg-error', 'install'))
+#
+## Fix the nettle install path.
+#strNettleLib64 = os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install', 'lib64')
+#strNettleLib = os.path.join(strCfg_workingFolder, 'external', 'libnettle', 'install', 'lib')
+#if os.path.exists(strNettleLib64) is True:
+#    shutil.copytree(strNettleLib64, strNettleLib, dirs_exist_ok=True)
 
 # ---------------------------------------------------------------------------
 #

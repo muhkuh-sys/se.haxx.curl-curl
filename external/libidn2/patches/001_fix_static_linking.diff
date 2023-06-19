@@ -1,0 +1,24 @@
+diff -uNr libidn2-2.3.4/lib/puny_decode.c libidn2-2.3.4_patched/lib/puny_decode.c
+--- libidn2-2.3.4/lib/puny_decode.c	2022-10-17 14:28:31.000000000 +0200
++++ libidn2-2.3.4_patched/lib/puny_decode.c	2023-06-16 17:53:59.407558212 +0200
+@@ -245,7 +245,7 @@
+ 
+ /* Create a compatibility symbol if supported.  Hidden references make
+    the target symbol hidden, hence the alias.  */
+-#ifdef HAVE_SYMVER_ALIAS_SUPPORT
++#if 0
+ __typeof__ (_idn2_punycode_decode_internal) _idn2_punycode_decode
+   __attribute__((visibility ("default"),
+ 		 alias ("_idn2_punycode_decode_internal")));
+diff -uNr libidn2-2.3.4/lib/puny_encode.c libidn2-2.3.4_patched/lib/puny_encode.c
+--- libidn2-2.3.4/lib/puny_encode.c	2022-10-17 14:28:31.000000000 +0200
++++ libidn2-2.3.4_patched/lib/puny_encode.c	2023-06-16 17:54:08.307591050 +0200
+@@ -246,7 +246,7 @@
+ 
+ /* Create a compatibility symbol if supported.  Hidden references make
+    the target symbol hidden, hence the alias.  */
+-#ifdef HAVE_SYMVER_ALIAS_SUPPORT
++#if 0
+ __typeof__ (_idn2_punycode_encode_internal) _idn2_punycode_encode
+   __attribute__((visibility ("default"),
+ 		 alias ("_idn2_punycode_encode_internal")));

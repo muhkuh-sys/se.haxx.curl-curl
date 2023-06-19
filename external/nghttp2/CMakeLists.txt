@@ -31,11 +31,12 @@ ExternalProject_Add(TARGET_nghttp2
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/nghttp2
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/nghttp2-1.53.0.tar.xz
                     URL_HASH SHA1=640c46a8805f384565bd56988055bf3b0cc58fd4
-                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/nghttp2/src/TARGET_nghttp2/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic ${CONFIGURE_HOST}
+                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/nghttp2/src/TARGET_nghttp2/configure --prefix=${CMAKE_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic ${CONFIGURE_HOST}
                     BUILD_COMMAND make
                     INSTALL_COMMAND make install
 )
 
-SET(LIBNGHTTP2_PREFIX       ${CMAKE_CURRENT_BINARY_DIR}/install    CACHE INTERNAL "The complete path to the nghttp2 installation.")
-SET(LIBNGHTTP2_LIBRARY      ${LIBNGHTTP2_PREFIX}/lib/libnghttp2.a  CACHE INTERNAL "The complete path to the nghttp2 library.")
-SET(LIBNGHTTP2_INCLUDE_DIR  ${LIBNGHTTP2_PREFIX}/include           CACHE INTERNAL "The include folder for the nghttp2 library.")
+SET(LIBNGHTTP2_PREFIX       ${CMAKE_BINARY_DIR}/install     CACHE INTERNAL "The complete path to the nghttp2 installation.")
+SET(LIBNGHTTP2_LIBRARY      nghttp2                         CACHE INTERNAL "The complete path to the nghttp2 library.")
+SET(LIBNGHTTP2_INCLUDE_DIR  ${LIBNGHTTP2_PREFIX}/include    CACHE INTERNAL "The include folder for the nghttp2 library.")
+SET(LIBNGHTTP2_LIB_DIR      ${LIBNGHTTP2_PREFIX}/lib        CACHE INTERNAL "The include folder for the nghttp2 library.")

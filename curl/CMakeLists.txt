@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.3)
+cmake_minimum_required(VERSION 3.7)
 
 PROJECT("curl")
 
@@ -61,12 +61,12 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Get the includes and library for libssh2.
 	# Include folders are in LIBSSH2_INCLUDE_DIR .
 	# Library is in LIBSSH2_LIBRARY
-	FIND_PACKAGE(LibSSH2 REQUIRED CONFIG)
-	GET_TARGET_PROPERTY(LIBSSH2_LIBRARY Libssh2::libssh2 LOCATION)
-	GET_TARGET_PROPERTY(LIBSSH2_INCLUDE_DIR Libssh2::libssh2 INTERFACE_INCLUDE_DIRECTORIES)
-	MESSAGE("LIBSSH2_LIBRARY: ${LIBSSH2_LIBRARY}")
-	MESSAGE("LIBSSH2_INCLUDE_DIR: ${LIBSSH2_INCLUDE_DIR}")
-	SET(LIBSSH2_DIR ${LIBSSH2_INCLUDE_DIR}/..)
+#	FIND_PACKAGE(LibSSH2 REQUIRED CONFIG)
+#	GET_TARGET_PROPERTY(LIBSSH2_LIBRARY Libssh2::libssh2 LOCATION)
+#	GET_TARGET_PROPERTY(LIBSSH2_INCLUDE_DIR Libssh2::libssh2 INTERFACE_INCLUDE_DIRECTORIES)
+#	MESSAGE("LIBSSH2_LIBRARY: ${LIBSSH2_LIBRARY}")
+#	MESSAGE("LIBSSH2_INCLUDE_DIR: ${LIBSSH2_INCLUDE_DIR}")
+#	SET(LIBSSH2_DIR ${LIBSSH2_INCLUDE_DIR}/..)
 
 	# Get the includes and library for zlib.
 	MESSAGE("net.zlib-zlib_DIR: ${net.zlib-zlib_DIR}")
@@ -77,90 +77,47 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	MESSAGE("ZLIB_INCLUDE_DIRS: ${ZLIB_INCLUDE_DIRS}")
 	SET(ZLIB_DIR ${ZLIB_INCLUDE_DIRS}/..)
 
-	SET(GNUTLS_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/gnutls/install)
-	MESSAGE("GNUTLS_DIR: ${GNUTLS_DIR}")
-
-	SET(LIBICONV_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/libiconv/install)
-	MESSAGE("LIBICONV_DIR: ${LIBICONV_DIR}")
-
-	SET(LIBIDN2_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/libidn2/install)
-	MESSAGE("LIBIDN2_DIR: ${LIBIDN2_DIR}")
-
-	SET(NGHTTP2_DIR ${CMAKE_CURRENT_BINARY_DIR}/../../external/nghttp2/install)
-	MESSAGE("NGHTTP2_DIR: ${NGHTTP2_DIR}")
-
 	SET(LIBLIST "")
 	SET(INCLIST "")
 	SET(LDLIST "")
 
+	LIST(APPEND INCLIST "-I${CMAKE_BINARY_DIR}/install/include")
+	LIST(APPEND LDLIST  "-L${CMAKE_BINARY_DIR}/install/lib")
+	LIST(APPEND LDLIST  "-L${CMAKE_BINARY_DIR}/install/lib64")
+
 	# Link to libssh2.
-	LIST(APPEND LIBLIST "-lssh2")
-	LIST(APPEND INCLIST "-I${LIBSSH2_DIR}/include")
-	LIST(APPEND LDLIST  "-L${LIBSSH2_DIR}/lib")
+	LIST(APPEND LIBLIST "-l${LIBSSH2_LIBRARY}")
 
 	# Link to libgcrypt (needed by libssh2).
-	LIST(APPEND LIBLIST "-lgcrypt")
-	LIST(APPEND INCLIST "-I${LIBGCRYPT_DIR}/include")
-	LIST(APPEND LDLIST  "-L${LIBGCRYPT_DIR}/lib")
+	LIST(APPEND LIBLIST "-l${LIBGCRYPT_LIBRARY}")
 
 	# Link to libgpg-error (needed by libgcrypt).
-	LIST(APPEND LIBLIST "-lgpg-error")
-	LIST(APPEND INCLIST "-I${LIBGPG_ERROR_DIR}/include")
-	LIST(APPEND LDLIST  "-L${LIBGPG_ERROR_DIR}/lib")
+	LIST(APPEND LIBLIST "-l${LIBGPGERROR_LIBRARY}")
 
-	# Windows uses WinSSL to get access to the system certificate store.
-	# Unix systems use GnuTLS with Nettle.
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		SET(SSL_ENGINE "--with-schannel")
+	SET(SSL_ENGINE "--with-gnutls=${GNUTLS_DIR}")
 
-		LIST(APPEND LIBLIST "-lcrypt32")
-	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		SET(SSL_ENGINE "--with-gnutls=${GNUTLS_DIR}")
+	# Link to libgnutls.
+#	LIST(APPEND LIBLIST "-l${LIBGNUTLS_LIBRARY}")
 
-		# Link to libgnutls.
-		LIST(APPEND LIBLIST "-lgnutls")
-		LIST(APPEND INCLIST "-I${GNUTLS_DIR}/include")
-		LIST(APPEND LDLIST  "-L${GNUTLS_DIR}/lib")
+	# Link to nettle.
+	LIST(APPEND LIBLIST "-l${LIBHOGWEED_LIBRARY}")
+	LIST(APPEND LIBLIST "-l${LIBNETTLE_LIBRARY}")
 
-		# Link to nettle.
-		LIST(APPEND LIBLIST "-lhogweed")
-		LIST(APPEND LIBLIST "-lnettle")
-		LIST(APPEND INCLIST "-I${LIBNETTLE_DIR}/include")
-		LIST(APPEND LDLIST  "-L${LIBNETTLE_DIR}/lib")
-
-		# Link to libgmp (needed by nettle).
-		LIST(APPEND LIBLIST "-lgmp")
-		LIST(APPEND INCLIST "-I${LIBGMP_DIR}/include")
-		LIST(APPEND LDLIST  "-L${LIBGMP_DIR}/lib")
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	# Link to libgmp (needed by nettle).
+	LIST(APPEND LIBLIST "-l${LIBGMP_LIBRARY}")
 
 	# Link to zlib.
 	LIST(APPEND LIBLIST "-lz")
 	LIST(APPEND INCLIST "-I${ZLIB_DIR}/include")
 	LIST(APPEND LDLIST  "-L${ZLIB_DIR}/lib")
 
-	# Link to libiconv.
-	LIST(APPEND LIBLIST "-liconv")
-	LIST(APPEND INCLIST "-I${LIBICONV_DIR}/include")
-	LIST(APPEND LDLIST  "-L${LIBICONV_DIR}/lib")
-
 	# Link to libidn2.
-	LIST(APPEND INCLIST "-I${LIBIDN2_DIR}/include")
-	LIST(APPEND LDLIST  "-L${LIBIDN2_DIR}/lib")
+	LIST(APPEND LIBLIST "-l${LIBIDN2_LIBRARY}")
 
-	# Add Windows system libraries.
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		LIST(APPEND LIBLIST "-lmsvcrt")
-		LIST(APPEND LIBLIST "-ladvapi32")
-		LIST(APPEND LIBLIST "-lshell32")
-		LIST(APPEND LIBLIST "-luser32")
-		LIST(APPEND LIBLIST "-lkernel32")
-		LIST(APPEND LIBLIST "-lwldap32")
-		LIST(APPEND LIBLIST "-lwinmm")
-		LIST(APPEND LIBLIST "-lws2_32")
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	# Link to libiconv.
+	LIST(APPEND LIBLIST "-l${LIBICONV_LIBRARY}")
 
-	STRING(REPLACE ";" " " P_LINK_LIBRARIES "${LIBLIST}")
+	STRING(REPLACE ";" " " P_DIREKT_LINK_LIBRARIES "${LIBLIST}")
 	STRING(REPLACE ";" " " P_INCLIST "${INCLIST}")
 	STRING(REPLACE ";" " " P_LDLIST "${LDLIST}")
 
@@ -168,17 +125,18 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libcurl
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/curl-${VERSION_EXTERNAL}.tar.xz
 	                    URL_HASH SHA1=44a8e2115a8cefb52959d17d6a647389db9e389d
-	                    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_LINK_LIBRARIES}" ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --with-libidn2 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt --enable-websockets --with-nghttp2=${NGHTTP2_DIR} --host=${CONFIGURE_HOST}
+	                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/libcurl/src/TARGET_libcurl/configure "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" "CPPFLAGS=${P_INCLIST}" "LDFLAGS=${P_LDLIST}" "LIBS=${P_DIREKT_LINK_LIBRARIES}" --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic --enable-crypto-auth --enable-sspi --enable-tls-srp --with-zlib=${ZLIB_DIR} ${SSL_ENGINE} --without-gssapi --with-libssh2=${LIBSSH2_DIR} --with-libidn2 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt --enable-websockets --with-nghttp2=${NGHTTP2_DIR} --with-nghttp3=${NGHTTP2_DIR} --with-ngtcp2=${NGTCP2_DIR} --host=${CONFIGURE_HOST}
 	                    BUILD_COMMAND make
 	                    INSTALL_COMMAND make install
 	)
 
-
+	ADD_DEPENDENCIES(TARGET_libcurl TARGET_gnutls TARGET_nghttp2 TARGET_nghttp3 TARGET_ngtcp2 TARGET_libssh2 TARGET_libgpg_error)
 
 	INCLUDE(CMakePackageConfigHelpers)
 
 	SET(LIBRARY_INSTALL_DIR "lib")
 	SET(P_LIBRARY_NAME "libcurl.a")
+	SET(P_LINK_LIBRARIES "-l${LIBNGHTTP2_LIBRARY} -l${LIBNGTCP2_LIBRARY} -l${LIBNGTCP2GNUTLS_LIBRARY} -l${LIBNGHTTP3_LIBRARY} -l${LIBGNUTLS_LIBRARY} ${P_DIREKT_LINK_LIBRARIES}")
 	SET(INCLUDE_INSTALL_DIR "include")
 	SET(LIB_NAME "curl")
 	CONFIGURE_PACKAGE_CONFIG_FILE(config.cmake.in
@@ -195,17 +153,17 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	        DESTINATION cmake
 	        COMPONENT Devel
 	)
-	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_DIR}/lib/libgcrypt.a ${LIBGPG_ERROR_DIR}/lib/libgpg-error.a ${LIBSSH2_LIBRARY}
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libcurl.a ${LIBGCRYPT_LIB_DIR}/lib${LIBGCRYPT_LIBRARY}.a ${LIBGPGERROR_LIB_DIR}/lib${LIBGPGERROR_LIBRARY}.a ${LIBSSH2_LIB_DIR}/lib${LIBSSH2_LIBRARY}.a
 	        DESTINATION lib
 	)
-	IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		# No additional libraries.
-	ELSE(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-		# Install libgnutls, nettle and libgmp.
-		INSTALL(FILES ${GNUTLS_DIR}/lib/libgnutls.a ${LIBNETTLE_DIR}/lib/libhogweed.a ${LIBNETTLE_DIR}/lib/libnettle.a ${LIBGMP_DIR}/lib/libgmp.a
-		        DESTINATION lib
-		)
-	ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	# Install libgnutls, nettle and libgmp.
+	INSTALL(FILES ${LIBGNUTLS_LIB_DIR}/lib${LIBGNUTLS_LIBRARY}.a ${LIBNETTLE_LIB_DIR}/lib${LIBHOGWEED_LIBRARY}.a ${LIBNETTLE_LIB_DIR}/lib${LIBNETTLE_LIBRARY}.a ${LIBGMP_LIB_DIR}/lib${LIBGMP_LIBRARY}.a
+	        DESTINATION lib
+	)
+	# Install libnghttp2, libnghttp3, libngtcp2, libidn2 and libiconv.
+	INSTALL(FILES ${LIBNGHTTP2_LIB_DIR}/lib${LIBNGHTTP2_LIBRARY}.a ${LIBNGHTTP3_LIB_DIR}/lib${LIBNGHTTP3_LIBRARY}.a ${LIBNGTCP2_LIB_DIR}/lib${LIBNGTCP2_LIBRARY}.a ${LIBNGTCP2_LIB_DIR}/lib${LIBNGTCP2GNUTLS_LIBRARY}.a ${LIBIDN2_LIB_DIR}/lib${LIBIDN2_LIBRARY}.a ${LIBICONV_LIB_DIR}/lib${LIBICONV_LIBRARY}.a
+	        DESTINATION lib
+	)
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/install/include/
 	        DESTINATION include
 	)
@@ -226,25 +184,12 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(CPACK_GENERATOR "TXZ")
 	INCLUDE(CPack)
 
-	IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a windows build.
+	CONFIGURE_FILE(installer/install_linux.lua
+	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+	               @ONLY)
 
-		CONFIGURE_FILE(installer/install_windows.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
-
-		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		        DESTINATION .)
-	ELSE(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a linux build.
-
-		CONFIGURE_FILE(installer/install_linux.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
-
-		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		        DESTINATION .)
-	ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+	        DESTINATION .)
 
 	CONFIGURE_FILE(installer/curl.xml
 	               ${CPACK_OUTPUT_FILE_PREFIX}/curl-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml

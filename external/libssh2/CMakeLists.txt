@@ -43,7 +43,15 @@ ExternalProject_Add(TARGET_libssh2
                     URL_HASH SHA1=2ebb3bc5c944090ade840f3a0ada9874eced979b
                     PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/libssh2-${VERSION_EXTERNAL}/src/TARGET_libssh2 --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
                     CMAKE_ARGS ${PRJ_CMAKE_ARGS}
-                    INSTALL_COMMAND make install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
+                    INSTALL_COMMAND make install DESTDIR=${CMAKE_BINARY_DIR}/install
                     TEST_AFTER_INSTALL 1
-                    TEST_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/install/lib/cmake/libssh2/Libssh2Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/install/lib/cmake/libssh2/LibSSH2Config.cmake
+                    TEST_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/install/lib/cmake/libssh2/Libssh2Config.cmake ${CMAKE_BINARY_DIR}/install/lib/cmake/libssh2/LibSSH2Config.cmake
 )
+
+# libssh2 depends on libgcrypt.
+ADD_DEPENDENCIES(TARGET_libssh2 TARGET_libgcrypt)
+
+SET(LIBSSH2_PREFIX       ${CMAKE_BINARY_DIR}/install        CACHE INTERNAL "The complete path to the libssh2 installation.")
+SET(LIBSSH2_LIBRARY      ssh2                               CACHE INTERNAL "The complete path to the libssh2 library.")
+SET(LIBSSH2_INCLUDE_DIR  ${LIBSSH2_PREFIX}/include          CACHE INTERNAL "The include folder for the libssh2 library.")
+SET(LIBSSH2_LIB_DIR      ${LIBSSH2_PREFIX}/lib              CACHE INTERNAL "The include folder for the libssh2 library.")
