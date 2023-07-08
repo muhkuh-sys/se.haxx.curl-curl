@@ -25,4 +25,19 @@ SET(LIBNETTLE_PREFIX       ${CMAKE_BINARY_DIR}/install            CACHE INTERNAL
 SET(LIBNETTLE_LIBRARY      nettle                                 CACHE INTERNAL "The complete path to the libnettle library.")
 SET(LIBHOGWEED_LIBRARY     hogweed                                CACHE INTERNAL "The complete path to the libnettle library.")
 SET(LIBNETTLE_INCLUDE_DIR  ${LIBNETTLE_PREFIX}/include            CACHE INTERNAL "The include folder for the libnettle library.")
-SET(LIBNETTLE_LIB_DIR      ${LIBNETTLE_PREFIX}/lib64              CACHE INTERNAL "The complete path to the libnettle library.")
+
+# Use the lib64 folder only on "ubuntu 20.04 x86_64" and "ubuntu 22.04 x86_64".
+SET(HAS_LIB64 (
+        (JONCHKI_PLATFORM_DIST_ID STREQUAL "ubuntu") AND
+        (
+                (JONCHKI_PLATFORM_DIST_VERSION STREQUAL "20.04") OR
+                (JONCHKI_PLATFORM_DIST_VERSION STREQUAL "22.04")
+        ) AND
+        (JONCHKI_PLATFORM_CPU_ARCH STREQUAL "x86_64")
+))
+
+IF(${HAS_LIB64})
+	SET(LIBNETTLE_LIB_DIR      ${LIBNETTLE_PREFIX}/lib64      CACHE INTERNAL "The complete path to the libnettle library.")
+ELSE(${HAS_LIB64})
+	SET(LIBNETTLE_LIB_DIR      ${LIBNETTLE_PREFIX}/lib        CACHE INTERNAL "The complete path to the libnettle library.")
+ENDIF(${HAS_LIB64})
