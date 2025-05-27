@@ -63,15 +63,17 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: Run container
+    - name: Run build in container
       if: runner.os == 'Linux'
       run: |
         docker run --rm \
           -v "${PWD}:/workspace" \
           -w /workspace \
-          ${{ matrix.platform.image }}
-    - name: Build
-      run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }}
+          ${{ matrix.platform.image }} \
+          ./build_artifact.py \
+            ${{ matrix.platform.distribution-id }} \
+            ${{ matrix.platform.distribution-version }} \
+            ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
