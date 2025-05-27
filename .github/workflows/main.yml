@@ -46,6 +46,8 @@ jobs:
           distribution-version: "24.04"
           cpu-architecture: riscv64
     steps:
+    - name: Show build host info
+      run: uname -a && hostname
     - name: Set up QEMU
       if: runner.os == 'Linux'
       uses: docker/setup-qemu-action@v3
