@@ -47,7 +47,7 @@ jobs:
           cpu-architecture: riscv64
     steps:
     - name: Show build host info
-      run: uname -a && hostname
+      run: cat /etc/os-release
     - name: Set up QEMU
       if: runner.os == 'Linux'
       uses: docker/setup-qemu-action@v3
