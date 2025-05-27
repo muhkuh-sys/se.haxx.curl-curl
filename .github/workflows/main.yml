@@ -52,8 +52,7 @@ jobs:
       with:
         platforms: linux/arm64, linux/riscv64
     - name: Checkout repository
-      # Use the old checkout v1 here. The newer v2 requires git 2.28 which is not available in the standard distribution.
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Run container
@@ -66,7 +65,7 @@ jobs:
     - name: Build
       run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: artifacts_${{ matrix.platform.distribution-id }}_${{ matrix.platform.distribution-version }}_${{ matrix.platform.cpu-architecture }}
         path: build/repository
