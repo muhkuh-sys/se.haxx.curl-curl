@@ -52,8 +52,6 @@ jobs:
           cpu-architecture: riscv64
           os: ubuntu-latest
     steps:
-    - name: Show build host info
-      run: cat /etc/os-release
     - name: Set up QEMU
       if: runner.os == 'Linux'
       uses: docker/setup-qemu-action@v3
