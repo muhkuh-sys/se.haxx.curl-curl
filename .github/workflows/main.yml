@@ -66,14 +66,14 @@ jobs:
     - name: Run build in container
       if: runner.os == 'Linux'
       run: |
-        docker run --rm \
+        docker run --rm -i \
         -v "${PWD}:/workspace" \
         -w /workspace \
         ${{ matrix.platform.image }} \
         ./build_artifact.py \
         ${{ matrix.platform.distribution-id }} \
         ${{ matrix.platform.distribution-version }} \
-        ${{ matrix.platform.cpu-architecture }} || echo "Build failed"
+        ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
