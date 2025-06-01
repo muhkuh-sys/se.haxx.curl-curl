@@ -65,8 +65,6 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         docker run --rm \
-          -v "${PWD}:/workspace" \
-          -w /workspace \
           ${{ matrix.platform.image }} \
           ./build_artifact.py \
             ${{ matrix.platform.distribution-id }} \
