@@ -64,7 +64,7 @@ jobs:
     - name: Run build in container
       if: runner.os == 'Linux'
       run: |
-        docker run --rm -it\
+        docker run --rm -i\
           ${{ matrix.platform.image }} \
           ./build_artifact.py \
             ${{ matrix.platform.distribution-id }} \
