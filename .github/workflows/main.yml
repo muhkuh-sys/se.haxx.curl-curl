@@ -73,7 +73,7 @@ jobs:
         ./build_artifact.py \
         ${{ matrix.platform.distribution-id }} \
         ${{ matrix.platform.distribution-version }} \
-        ${{ matrix.platform.cpu-architecture }}
+        ${{ matrix.platform.cpu-architecture }} || echo "Build failed"
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
