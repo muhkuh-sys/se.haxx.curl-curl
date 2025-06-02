@@ -4,9 +4,6 @@ PROJECT("curl")
 
 INCLUDE(ExternalProject)
 
-# Python is needed for the patch tool.
-FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
-
 SET(VERSION_EXTERNAL "8.1.1")
 SET(VERSION_PACKAGE  "1")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
