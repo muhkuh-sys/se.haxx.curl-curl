@@ -11,8 +11,8 @@
 		<repository id="github" type="url" cacheable="true" rescan="3600">
 			<root>https://github.com/muhkuh-sys</root>
 			<versions>[dotgroup]-[module]/releases</versions>
-			<config>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version][platform].[extension]</config>
-			<artifact>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version][platform].[extension]</artifact>
+			<config>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version][platform_id].[extension]</config>
+			<artifact>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version][platform_id].[extension]</artifact>
 			<initialpage>1</initialpage>
 			<versionparser>
   -- Get the current page.
