@@ -277,6 +277,7 @@ subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 
 astrCMAKE_COMPILER.append('-DZLIB_PREFIX=%s' % os.path.join(strCfg_workingFolder, 'build_requirements', 'jonchki', 'install', 'dev'))
 astrCMAKE_COMPILER.append('-Dnet.zlib-zlib_DIR=%s' % os.path.join(strCfg_workingFolder, 'build_requirements', 'jonchki', 'install', 'dev', 'cmake'))
+print(astrCmd)
 
 # ---------------------------------------------------------------------------
 #
@@ -319,6 +320,7 @@ astrCmd = [
 astrCmd.extend(astrCMAKE_COMPILER)
 astrCmd.extend(astrCMAKE_PLATFORM)
 astrCmd.append(strCfg_projectFolder)
+print(astrCmd)
 strCwd = os.path.join(strCfg_workingFolder, 'curl')
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 subprocess.check_call('%s pack' % strMake, shell=True, cwd=strCwd, env=astrEnv)
