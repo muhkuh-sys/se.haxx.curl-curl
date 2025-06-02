@@ -57,8 +57,6 @@ jobs:
       uses: docker/setup-qemu-action@v3
       with:
         platforms: linux/arm64, linux/riscv64
-    - name: Configure Git Safe Directory
-      run: git config --global --add safe.directory /workspace
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
