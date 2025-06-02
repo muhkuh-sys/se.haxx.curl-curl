@@ -11,7 +11,7 @@
 		<repository id="muhkuh@github" type="http" cacheable="true" rescan="1800">
 			<root>https://github.com/muhkuh-sys</root>
 			<versions>[dotgroup]-[module]/releases?page=[page]</versions>
-			<config>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version]${JONCHKI_PLATFORM_ID}_${JONCHKI_PLATFORM_VERSION}_${JONCHKI_PLATFORM_ARCH}.[extension]</config>
+			<config>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version].[extension]</config>
 			<artifact>[dotgroup]-[module]/releases/download/v[version]/[artifact]-[version][platform].[extension]</artifact>
 			<initialpage>1</initialpage>
 			<versionparser>
