@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependency-log>
 	<dependencies>
-		<dependency group="net.zlib" module="zlib" artifact="zlib" version="1.2.13.2"/>
+		<dependency group="net.zlib" module="zlib" artifact="zlib" platform="ubuntu_24.04_x86_64" version="1.2.13.2"/>
 		<dependency group="se.haxx.curl" module="curl" artifact="curl" version="8.1.1.1"/>
 	</dependencies>
 	<build-dependencies>
