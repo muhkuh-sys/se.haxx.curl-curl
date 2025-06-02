@@ -4,6 +4,8 @@ PROJECT("libidn2")
 
 INCLUDE(ExternalProject)
 
+FIND_PACKAGE(Python3 REQUIRED COMPONENTS Interpreter)
+SET(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
 
 #----------------------------------------------------------------------------
 #

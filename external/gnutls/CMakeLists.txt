@@ -5,7 +5,8 @@ PROJECT("gnutls")
 INCLUDE(ExternalProject)
 
 # Python is used for the patch script.
-FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
+FIND_PACKAGE(Python3 REQUIRED COMPONENTS Interpreter)
+SET(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
 
 #----------------------------------------------------------------------------
 #
