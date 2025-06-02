@@ -18,4 +18,9 @@
 	<dependencies>
 		<build-dependency group="net.zlib" module="zlib" artifact="zlib" version="1"/>
 	</dependencies>
+	<actions>
+		<action name="pack">
+		  return true
+		</action>
+	</actions>
 </jonchki-artifact>
