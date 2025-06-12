@@ -23,7 +23,7 @@ ExternalProject_Add(TARGET_gnutls
 )
 
 # gnutls depends on libnettle and libidn2.
-ADD_DEPENDENCIES(TARGET_gnutls TARGET_libnettle TARGET_libidn2)
+ADD_DEPENDENCIES(TARGET_gnutls TARGET_libnettle)
 
 SET(LIBGNUTLS_PREFIX       ${CMAKE_BINARY_DIR}/install            CACHE INTERNAL "The complete path to the libgnutls installation.")
 SET(LIBGNUTLS_LIBRARY      gnutls                                 CACHE INTERNAL "The complete path to the libgnutls library.")

@@ -36,7 +36,7 @@ ExternalProject_Add(TARGET_ngtcp2
 )
 
 # libngtcp2 depends in gnutls, libnettle and libidn2.
-ADD_DEPENDENCIES(TARGET_ngtcp2 TARGET_gnutls TARGET_libnettle TARGET_libidn2)
+ADD_DEPENDENCIES(TARGET_ngtcp2 TARGET_gnutls TARGET_libnettle)
 
 SET(LIBNGTCP2_PREFIX         ${CMAKE_BINARY_DIR}/install    CACHE INTERNAL "The complete path to the ngtcp2 installation.")
 SET(LIBNGTCP2_LIBRARY        ngtcp2                         CACHE INTERNAL "The complete path to the ngtcp2 library.")

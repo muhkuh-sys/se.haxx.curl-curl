@@ -16,7 +16,8 @@
 		</description>
 	</info>
 	<dependencies>
-		<build-dependency group="net.zlib" module="zlib" artifact="zlib" version="1"/>
+		<build-dependency group="net.zlib" module="zlib"    artifact="zlib"    version="1"/>
+		<build-dependency group="org.gnu"  module="libidn2" artifact="libidn2" version="2"/>
 	</dependencies>
 	<actions>
 		<action name="pack">

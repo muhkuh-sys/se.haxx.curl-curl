@@ -53,7 +53,7 @@ strCfg_jonchkiInstallationFolder = os.path.join(
 
 # Select the verbose level for jonchki.
 # Possible values are "debug", "info", "warning", "error" and "fatal".
-strCfg_jonchkiVerbose = 'info'
+strCfg_jonchkiVerbose = 'debug'
 
 strCfg_jonchkiSystemConfiguration = os.path.join(
     strCfg_projectFolder,
